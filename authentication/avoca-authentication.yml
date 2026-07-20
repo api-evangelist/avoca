@@ -1,0 +1,53 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/avoca-openapi-original.json
+docs: https://docs.avoca.ai/api-reference/authentication
+summary:
+  types:
+  - http
+  scheme: bearer
+  api_key_format: avoca_<64 hex characters>
+  header: 'Authorization: Bearer <API_KEY>'
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: >-
+    API key in the format `avoca_<64 hex characters>`, presented as
+    `Authorization: Bearer <API_KEY>` on every Enterprise API request.
+  sources:
+  - openapi/avoca-openapi-original.json
+# Key types govern which teams/enterprises a key can reach (from the docs auth page).
+key_types:
+- name: enterprise
+  scope: Single team; no additional headers required.
+- name: enterprise_all_teams
+  scope: >-
+    All teams within one enterprise. Requires the `x-team-id` header on v0
+    endpoints, or the team id in the URL path on v1 endpoints.
+- name: portfolio_all_teams
+  scope: >-
+    Multiple teams across potentially different enterprises; same scoping rules
+    as enterprise_all_teams but excludes enterprise-specific routes.
+# Per-key permission scopes documented on the auth page. Missing scope => 403.
+permission_scopes:
+- scope: read:calls
+  description: Call records, metadata, and pre-call transfers.
+- scope: read:transcripts
+  description: Call transcripts.
+- scope: read:leads
+  description: Unified leads (v0) and the canonical leads feed (v1).
+- scope: read:teams
+  description: Listing accessible teams (multi-team keys only).
+- scope: read:coach
+  description: Coach evaluations, scores, and rubrics.
+- scope: read:scheduler_analytics
+  description: Scheduler analytics, sessions, bookings, and scheduler configs.
+- scope: read:outbound
+  description: Outbound texting feeds (campaign texts and customer events).
+team_scoping:
+  header: x-team-id
+  note: >-
+    v0 endpoints resolve the team from the `x-team-id` header (or an optional
+    `team_id` query parameter); v1 endpoints carry the team id in the URL path
+    (`/api/v1/teams/{teamId}/...`).
