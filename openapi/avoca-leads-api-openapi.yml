@@ -1,0 +1,531 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Leads API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Leads
+  description: Unified leads (v0) and the canonical leads feed (v1)
+paths:
+  /api/leads:
+    get:
+      tags:
+      - Leads
+      summary: List unified leads (v0)
+      description: Channel-touchpoint aggregation of leads across calls, the scheduling widget, web chat, text, and Google LSA. This is **not** the canonical leads record and does not include the raw third-party payload — for that, use the v1 leads feed (`GET /api/v1/teams/{teamId}/leads`). Requires the `read:leads` permission.
+      operationId: listLeadsV0
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - name: type
+        in: query
+        description: Filter by lead type
+        schema:
+          type: string
+          enum:
+          - call
+          - scheduling_widget
+          - web_chat
+          - text
+          - google_lsa
+      - $ref: '#/components/parameters/limit1000'
+      - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          description: Paginated list of unified leads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeadV0'
+                  pagination:
+                    $ref: '#/components/schemas/OffsetPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v1/teams/{teamId}/leads:
+    get:
+      tags:
+      - Leads
+      summary: List leads (single team)
+      description: 'The canonical leads feed for one team: the historical/pull counterpart to the `lead.*` event webhooks, including the raw third-party payload. Keyset cursor-paginated ascending by `(created_at, id)`. Leads from registered test phone numbers are excluded by default (`include_test_numbers=true` opts in). Requires the `read:leads` permission.'
+      operationId: listTeamLeads
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - $ref: '#/components/parameters/leadsStartDate'
+      - $ref: '#/components/parameters/leadsEndDate'
+      - $ref: '#/components/parameters/leadsMedium'
+      - $ref: '#/components/parameters/leadsSource'
+      - $ref: '#/components/parameters/leadsStatus'
+      - $ref: '#/components/parameters/leadsIncludeRaw'
+      - $ref: '#/components/parameters/leadsIncludeIgnored'
+      - $ref: '#/components/parameters/leadsIncludeTestNumbers'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated leads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeadV1'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+                  meta:
+                    $ref: '#/components/schemas/TeamMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/enterprise/{enterpriseId}/leads:
+    get:
+      tags:
+      - Leads
+      summary: List leads (all brands)
+      description: The canonical leads feed across every team (brand) in the enterprise. Requires an `enterprise_all_teams` key whose enterprise matches the path — single-team and portfolio keys receive 403. Every row carries `team_id`. Same query parameters as the single-team feed. Requires the `read:leads` permission.
+      operationId: listEnterpriseLeads
+      parameters:
+      - name: enterpriseId
+        in: path
+        required: true
+        description: The enterprise ID
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/leadsStartDate'
+      - $ref: '#/components/parameters/leadsEndDate'
+      - $ref: '#/components/parameters/leadsMedium'
+      - $ref: '#/components/parameters/leadsSource'
+      - $ref: '#/components/parameters/leadsStatus'
+      - $ref: '#/components/parameters/leadsIncludeRaw'
+      - $ref: '#/components/parameters/leadsIncludeIgnored'
+      - $ref: '#/components/parameters/leadsIncludeTestNumbers'
+      - $ref: '#/components/parameters/includeTestTeams'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated leads across all brands
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeadV1'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+                  meta:
+                    type: object
+                    properties:
+                      enterprise_id:
+                        type: integer
+                      team_ids:
+                        type: array
+                        items:
+                          type: integer
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  parameters:
+    limit500default50:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+    leadsIncludeIgnored:
+      name: include_ignored
+      in: query
+      description: When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)
+      schema:
+        type: boolean
+        default: false
+    leadsStatus:
+      name: status
+      in: query
+      description: Lead processing status
+      schema:
+        type: string
+        enum:
+        - created
+        - queued
+        - processing
+        - completed
+        - failed
+        - skipped
+    leadsSource:
+      name: source
+      in: query
+      description: Lead-source canonical `name` (exact match)
+      schema:
+        type: string
+    offset:
+      name: offset
+      in: query
+      description: Pagination offset (default 0)
+      schema:
+        type: integer
+        default: 0
+    leadsStartDate:
+      name: start_date
+      in: query
+      description: Inclusive lower bound on `created_at` (>=)
+      schema:
+        type: string
+        format: date-time
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    leadsMedium:
+      name: medium
+      in: query
+      description: Lead-source medium
+      schema:
+        type: string
+        enum:
+        - webhook
+        - email_alerts
+        - st_bookings_alerts
+        - st_native
+        - google_lsa
+        - yelp
+        - web_chat
+        - dropped_responder
+    leadsEndDate:
+      name: end_date
+      in: query
+      description: Exclusive upper bound on `created_at` (<)
+      schema:
+        type: string
+        format: date-time
+    leadsIncludeTestNumbers:
+      name: include_test_numbers
+      in: query
+      description: When `true`, include leads from the team's registered test phone numbers (default false)
+      schema:
+        type: boolean
+        default: false
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+    leadsIncludeRaw:
+      name: include_raw
+      in: query
+      description: When `false`, omit the `raw` third-party payload field (default true)
+      schema:
+        type: boolean
+        default: true
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
+    limit1000:
+      name: limit
+      in: query
+      description: Results per page (default 100, max 1000)
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    OffsetPagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
+    LeadV1:
+      type: object
+      description: A canonical lead record — the pull counterpart to the `lead.*` event webhooks.
+      properties:
+        id:
+          type: integer
+          examples:
+          - 12345
+        team_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        received_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - created
+          - queued
+          - processing
+          - completed
+          - failed
+          - skipped
+        source:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+              examples:
+              - angi
+            display_name:
+              type: string
+              examples:
+              - Angi
+            medium:
+              type: string
+              examples:
+              - webhook
+        external_id:
+          type:
+          - string
+          - 'null'
+          description: Third-party reference ID
+        customer:
+          type: object
+          properties:
+            name:
+              type:
+              - string
+              - 'null'
+            phone_number:
+              type:
+              - string
+              - 'null'
+            email:
+              type:
+              - string
+              - 'null'
+            address:
+              type:
+              - string
+              - 'null'
+            street:
+              type:
+              - string
+              - 'null'
+            city:
+              type:
+              - string
+              - 'null'
+            state:
+              type:
+              - string
+              - 'null'
+            zip:
+              type:
+              - string
+              - 'null'
+            country:
+              type:
+              - string
+              - 'null'
+            notes:
+              type:
+              - string
+              - 'null'
+        attribution:
+          type: object
+          properties:
+            utm_source:
+              type:
+              - string
+              - 'null'
+            utm_medium:
+              type:
+              - string
+              - 'null'
+            utm_campaign:
+              type:
+              - string
+              - 'null'
+            utm_term:
+              type:
+              - string
+              - 'null'
+            utm_content:
+              type:
+              - string
+              - 'null'
+        contacted:
+          type: boolean
+          description: Whether any outreach touchpoint has occurred for this lead
+        not_contacted_reason:
+          type:
+          - string
+          - 'null'
+          description: Why the lead has not been contacted, when `contacted` is false
+        bookings:
+          type: array
+          description: Bookings attributed to this lead, deduped by CRM job ID and sorted earliest-first
+          items:
+            type: object
+            properties:
+              st_job_id:
+                type:
+                - string
+                - 'null'
+              booked_at:
+                type:
+                - string
+                - 'null'
+                format: date-time
+              job_type:
+                type:
+                - string
+                - 'null'
+        booked_job_id:
+          type:
+          - string
+          - 'null'
+          description: CRM job ID of the first booking, when present
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        raw:
+          type: object
+          description: Original third-party payload (omit with `include_raw=false`)
+    TeamMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
+    CursorPagination:
+      type: object
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
+        has_more:
+          type: boolean
+        limit:
+          type: integer
+    LeadV0:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        datetime:
+          type: string
+          format: date-time
+        type:
+          type: string
+          enum:
+          - call
+          - scheduling_widget
+          - web_chat
+          - text
+          - google_lsa
+        customer_phone:
+          type:
+          - string
+          - 'null'
+        customer_email:
+          type:
+          - string
+          - 'null'
+        lead_content:
+          type: object
+          description: Channel-specific lead content
+        agent:
+          type:
+          - string
+          - 'null'
+          description: Assistant ID that handled the touchpoint
+        referrer_url:
+          type:
+          - string
+          - 'null'
+        attribution:
+          type: object
+          properties:
+            utm_source:
+              type:
+              - string
+              - 'null'
+            gclid:
+              type:
+              - string
+              - 'null'
+  responses:
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`

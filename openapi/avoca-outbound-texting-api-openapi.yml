@@ -1,0 +1,212 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Outbound Texting API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Outbound Texting
+  description: Campaign text and subscription-event feeds for BI ingestion
+paths:
+  /api/v1/teams/{teamId}/outbound/campaign-texts:
+    get:
+      tags:
+      - Outbound Texting
+      summary: List campaign texts
+      description: One row per initial outbound campaign text message, including the customer's first reply. Designed for partners ingesting Avoca outbound activity into a BI warehouse. Always scoped to the team in the URL path. Requires the `read:outbound` permission.
+      operationId: listCampaignTexts
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - name: campaign_name
+        in: query
+        required: true
+        description: Campaign to return texts for
+        schema:
+          type: string
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated campaign texts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CampaignText'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+                  meta:
+                    type: object
+                    properties:
+                      team_id:
+                        type: integer
+                      campaign_name:
+                        type: string
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/teams/{teamId}/outbound/events:
+    get:
+      tags:
+      - Outbound Texting
+      summary: List outbound customer events
+      description: 'Customer events over time (multiple rows per customer): outbound messages and subscription (opt-in/opt-out) changes. Subscription events reflect each phone''s *current* state, timestamped by its last change — at most one subscription event per phone. Requires the `read:outbound` permission.'
+      operationId: listOutboundEvents
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - name: action
+        in: query
+        description: Filter to one action
+        schema:
+          type: string
+          enum:
+          - outbound_message
+          - customer_subscribed
+          - customer_unsubscribed
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated outbound events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OutboundEvent'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+                  meta:
+                    $ref: '#/components/schemas/TeamMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  schemas:
+    CampaignText:
+      type: object
+      properties:
+        action:
+          type: string
+          description: Constant `outbound_message` — this feed is outbound-only
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: Conversation's resolved CRM customer ID
+        campaign_name:
+          type: string
+        customer_response:
+          type: string
+          description: Body of the customer's first inbound reply, else `no response`
+        created_date:
+          type: string
+          format: date-time
+        phone_number:
+          type: string
+    TeamMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
+    OutboundEvent:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - outbound_message
+          - customer_subscribed
+          - customer_unsubscribed
+        customer_id:
+          type:
+          - string
+          - 'null'
+        created_at:
+          type: string
+          format: date-time
+        customer_phone_number:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    CursorPagination:
+      type: object
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
+        has_more:
+          type: boolean
+        limit:
+          type: integer
+  parameters:
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    endDate:
+      name: end_date
+      in: query
+      description: Only rows before this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    limit500default50:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+  responses:
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`

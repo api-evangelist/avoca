@@ -1,0 +1,304 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Analytics (v1) API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Analytics (v1)
+  description: v1 funnel, UTM, service-area, and issue-type analytics
+paths:
+  /api/v1/teams/{teamId}/analytics/funnel:
+    get:
+      tags:
+      - Analytics (v1)
+      summary: Get funnel analytics
+      description: Funnel metrics with drop-off data. Requires the `read:scheduler_analytics` permission.
+      operationId: getTeamFunnel
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - $ref: '#/components/parameters/timezone'
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Funnel metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Funnel'
+                  meta:
+                    $ref: '#/components/schemas/AnalyticsMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/teams/{teamId}/analytics/utm:
+    get:
+      tags:
+      - Analytics (v1)
+      summary: Get UTM attribution
+      description: UTM attribution data. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.
+      operationId: getTeamUtm
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - $ref: '#/components/parameters/timezone'
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: UTM attribution rows
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UtmRow'
+                  meta:
+                    $ref: '#/components/schemas/AnalyticsMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/teams/{teamId}/analytics/service-areas:
+    get:
+      tags:
+      - Analytics (v1)
+      summary: Get service-area distribution
+      description: Distribution of service-area lookups. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.
+      operationId: getTeamServiceAreas
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - $ref: '#/components/parameters/timezone'
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Service-area distribution
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        serviceArea:
+                          type: string
+                        count:
+                          type: integer
+                  meta:
+                    $ref: '#/components/schemas/AnalyticsMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/teams/{teamId}/analytics/issue-types:
+    get:
+      tags:
+      - Analytics (v1)
+      summary: Get issue-type distribution
+      description: Distribution of issue types selected in the scheduler. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.
+      operationId: getTeamIssueTypes
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - $ref: '#/components/parameters/timezone'
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Issue-type distribution
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        issueType:
+                          type: string
+                        count:
+                          type: integer
+                  meta:
+                    $ref: '#/components/schemas/AnalyticsMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/analytics/funnel:
+    get:
+      tags:
+      - Analytics (v1)
+      summary: Get funnel analytics (cross-team)
+      description: Aggregated funnel data across all teams accessible to a multi-team key, with an optional `team_id` filter. Requires the `read:scheduler_analytics` permission.
+      operationId: getFunnel
+      parameters:
+      - name: team_id
+        in: query
+        description: Filter to one team
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - $ref: '#/components/parameters/timezone'
+      - $ref: '#/components/parameters/includeTestTeams'
+      responses:
+        '200':
+          description: Aggregated funnel metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Funnel'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+    timezone:
+      name: timezone
+      in: query
+      description: IANA timezone for date calculations (default America/New_York)
+      schema:
+        type: string
+        default: America/New_York
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+  schemas:
+    Funnel:
+      type: object
+      properties:
+        sessions:
+          type: integer
+          examples:
+          - 1250
+        booking_started:
+          type: integer
+        customer_info_completed:
+          type: integer
+        booking_completed:
+          type: integer
+        conversion_rate:
+          type: number
+          examples:
+          - 34
+        drop_off_count:
+          type: integer
+        drop_off_rate:
+          type: number
+          examples:
+          - 66
+    AnalyticsMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
+        start_date:
+          type: string
+        end_date:
+          type: string
+        timezone:
+          type: string
+    UtmRow:
+      type: object
+      properties:
+        source:
+          type: string
+          examples:
+          - google
+        medium:
+          type: string
+          examples:
+          - cpc
+        campaign:
+          type: string
+        term:
+          type: string
+        content:
+          type: string
+        sessions:
+          type: integer
+        conversions:
+          type: integer
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+  responses:
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`

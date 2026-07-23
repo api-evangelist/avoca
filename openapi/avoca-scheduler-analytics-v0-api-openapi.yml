@@ -1,0 +1,503 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Scheduler Analytics (v0) API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Scheduler Analytics (v0)
+  description: Simple Scheduler analytics — legacy flat endpoints
+paths:
+  /api/scheduler-analytics:
+    get:
+      tags:
+      - Scheduler Analytics (v0)
+      summary: Get scheduler analytics
+      description: 'Detailed Simple Scheduler analytics. Select which metric blocks to include with the `metrics` parameter: `funnel`, `bookings`, `chart`, `utm`, `google_ads`, `service_areas`, `issue_types`, `customer_events`. Requires the `read:scheduler_analytics` permission.'
+      operationId: getSchedulerAnalytics
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - $ref: '#/components/parameters/timezone'
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      - name: metrics
+        in: query
+        description: 'Comma-separated metric blocks to include (default: all)'
+        schema:
+          type: string
+      - $ref: '#/components/parameters/limit1000'
+      - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          description: Requested analytics blocks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SchedulerAnalytics'
+                  pagination:
+                    $ref: '#/components/schemas/OffsetPagination'
+                  metadata:
+                    type: object
+                    properties:
+                      startDate:
+                        type: string
+                        format: date-time
+                      endDate:
+                        type: string
+                        format: date-time
+                      timezone:
+                        type: string
+                      schedulerId:
+                        type:
+                        - integer
+                        - 'null'
+                      metricsRequested:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/scheduler-analytics/summary:
+    get:
+      tags:
+      - Scheduler Analytics (v0)
+      summary: Get scheduler analytics summary
+      description: Summary Simple Scheduler stats for today, this week, and this month. Requires the `read:scheduler_analytics` permission.
+      operationId: getSchedulerAnalyticsSummary
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - $ref: '#/components/parameters/timezone'
+      responses:
+        '200':
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      today:
+                        $ref: '#/components/schemas/PeriodSummary'
+                      thisWeek:
+                        $ref: '#/components/schemas/PeriodSummary'
+                      thisMonth:
+                        $ref: '#/components/schemas/PeriodSummary'
+                  metadata:
+                    type: object
+                    properties:
+                      timezone:
+                        type: string
+                      generatedAt:
+                        type: string
+                        format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/simple_scheduler_booking_requests:
+    get:
+      tags:
+      - Scheduler Analytics (v0)
+      summary: List Simple Scheduler booking requests
+      description: Booking requests submitted through Simple Scheduler. Supports offset pagination (`offset` + `limit`, returns `meta.total`) or cursor pagination (`cursor` = `created_at` from a previous page; response includes `next_cursor` and `has_more`). Requires the `read:scheduler_analytics` permission.
+      operationId: listSimpleSchedulerBookingRequests
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - name: status
+        in: query
+        description: Filter by request status
+        schema:
+          type: string
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      - name: has_utm
+        in: query
+        description: When `true`, only requests with UTM attribution
+        schema:
+          type: boolean
+      - name: cursor
+        in: query
+        description: ISO 8601 `created_at` cursor from a previous page (cursor mode)
+        schema:
+          type: string
+          format: date-time
+      - $ref: '#/components/parameters/limit500'
+      - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          description: Booking requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        team_id:
+                          type: integer
+                        scheduler_id:
+                          type: integer
+                        status:
+                          type: string
+                        st_job_id:
+                          type:
+                          - integer
+                          - 'null'
+                          description: ServiceTitan job ID when the request produced a job
+                        created_at:
+                          type: string
+                          format: date-time
+                        request_data:
+                          type: object
+                          description: Raw booking request payload
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type:
+                        - integer
+                        - 'null'
+                        description: Total rows (offset mode only)
+                      next_cursor:
+                        type:
+                        - string
+                        - 'null'
+                        description: Cursor for the next page (cursor mode)
+                      has_more:
+                        type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/simple_scheduler_config:
+    get:
+      tags:
+      - Scheduler Analytics (v0)
+      summary: List Simple Scheduler configs
+      description: Scheduler configurations for the team. Team is resolved from `x-team-id` or the optional `team_id` query parameter (multi-team keys must have access to that team). Requires the `read:scheduler_analytics` permission.
+      operationId: listSimpleSchedulerConfigs
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - name: team_id
+        in: query
+        description: Target team (alternative to the x-team-id header for multi-team keys)
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Scheduler configs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SchedulerConfig'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  responses:
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
+    offset:
+      name: offset
+      in: query
+      description: Pagination offset (default 0)
+      schema:
+        type: integer
+        default: 0
+    limit1000:
+      name: limit
+      in: query
+      description: Results per page (default 100, max 1000)
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
+    timezone:
+      name: timezone
+      in: query
+      description: IANA timezone for date calculations (default America/New_York)
+      schema:
+        type: string
+        default: America/New_York
+    limit500:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+  schemas:
+    OffsetPagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
+    SchedulerAnalytics:
+      type: object
+      description: 'Metric blocks are present only when requested via the `metrics` parameter (default: all).'
+      properties:
+        funnel:
+          type: object
+          properties:
+            sessions:
+              type: integer
+            bookingStarted:
+              type: integer
+            customerInfoCompleted:
+              type: integer
+            bookingCompleted:
+              type: integer
+            conversionRate:
+              type: number
+        bookings:
+          type: object
+          properties:
+            total:
+              type: integer
+            avgBookingTimeSeconds:
+              type: number
+        chartData:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+              sessions:
+                type: integer
+              conversions:
+                type: integer
+        utmData:
+          type: array
+          items:
+            $ref: '#/components/schemas/UtmRow'
+        googleAdsData:
+          type: array
+          items:
+            type: object
+            properties:
+              gclid:
+                type: string
+              wbraid:
+                type: string
+              gbraid:
+                type: string
+              sessions:
+                type: integer
+              conversions:
+                type: integer
+        serviceAreaData:
+          type: array
+          items:
+            type: object
+            properties:
+              serviceArea:
+                type: string
+              count:
+                type: integer
+        issueTypeData:
+          type: array
+          items:
+            type: object
+            properties:
+              issueType:
+                type: string
+              count:
+                type: integer
+        customerEvents:
+          type: array
+          description: Individual customer sessions with PII (paginated via `limit`/`offset`)
+          items:
+            type: object
+            properties:
+              sessionId:
+                type: string
+              status:
+                type: string
+              customerInfo:
+                type: object
+                properties:
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  email:
+                    type:
+                    - string
+                    - 'null'
+                  phone:
+                    type:
+                    - string
+                    - 'null'
+                  address:
+                    type:
+                    - string
+                    - 'null'
+              issueType:
+                type:
+                - string
+                - 'null'
+              jobType:
+                type:
+                - string
+                - 'null'
+              selectedDate:
+                type:
+                - string
+                - 'null'
+              selectedTime:
+                type:
+                - string
+                - 'null'
+              utmSource:
+                type:
+                - string
+                - 'null'
+              gclid:
+                type:
+                - string
+                - 'null'
+              conversionValue:
+                type:
+                - number
+                - 'null'
+              lastActivity:
+                type:
+                - string
+                - 'null'
+                format: date-time
+    UtmRow:
+      type: object
+      properties:
+        source:
+          type: string
+          examples:
+          - google
+        medium:
+          type: string
+          examples:
+          - cpc
+        campaign:
+          type: string
+        term:
+          type: string
+        content:
+          type: string
+        sessions:
+          type: integer
+        conversions:
+          type: integer
+    SchedulerConfig:
+      type: object
+      properties:
+        id:
+          type: integer
+        team_id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    PeriodSummary:
+      type: object
+      properties:
+        sessions:
+          type: integer
+          examples:
+          - 312
+        bookings:
+          type: integer
+          examples:
+          - 89
+        conversionRate:
+          type: number
+          examples:
+          - 28.5
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`

@@ -1,0 +1,266 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Coach API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Coach
+  description: Coach (QA) call evaluations and rubrics
+paths:
+  /api/coach:
+    get:
+      tags:
+      - Coach
+      summary: List coach call evaluations
+      description: List evaluated coach (QA) calls for the team, newest first. Each row includes the score, awarded/max points, per-item evaluation answers, and the `rubric_id` for joining to `GET /api/coach/rubrics`. Requires the `read:coach` permission.
+      operationId: listCoachCalls
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - $ref: '#/components/parameters/limit1000'
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - $ref: '#/components/parameters/timezone'
+      responses:
+        '200':
+          description: Paginated list of coach calls
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CoachCall'
+                  pagination:
+                    $ref: '#/components/schemas/OffsetPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/coach/{id}:
+    get:
+      tags:
+      - Coach
+      summary: Get a coach call evaluation
+      description: Get a single evaluated coach call by its numeric ID. Requires the `read:coach` permission.
+      operationId: getCoachCall
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Coach call ID (number)
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/xTeamId'
+      responses:
+        '200':
+          description: The coach call
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CoachCall'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/coach/rubrics:
+    get:
+      tags:
+      - Coach
+      summary: List coach rubrics
+      description: 'Reference endpoint: lists the team''s enabled rubrics. Items provide the key → name mapping for the `evaluation_answers` keys returned on coach calls. Requires the `read:coach` permission.'
+      operationId: listCoachRubrics
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      responses:
+        '200':
+          description: Enabled rubrics with item key/name pairs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+                        items:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
+    offset:
+      name: offset
+      in: query
+      description: Pagination offset (default 0)
+      schema:
+        type: integer
+        default: 0
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
+    limit1000:
+      name: limit
+      in: query
+      description: Results per page (default 100, max 1000)
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    timezone:
+      name: timezone
+      in: query
+      description: IANA timezone for date calculations (default America/New_York)
+      schema:
+        type: string
+        default: America/New_York
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+  schemas:
+    OffsetPagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    CoachCall:
+      type: object
+      description: An evaluated coach (QA) call. `evaluation_answers` maps rubric item keys to "Yes" / "No" / "N/A" — join to `GET /api/coach/rubrics` via `rubric_id` for item names.
+      properties:
+        call_id:
+          type: integer
+        team_id:
+          type: integer
+        rubric_id:
+          type:
+          - integer
+          - 'null'
+        call_date:
+          type: string
+          format: date-time
+        call_time_local:
+          type:
+          - string
+          - 'null'
+          examples:
+          - '14:32:05'
+        duration_seconds:
+          type:
+          - integer
+          - 'null'
+        score:
+          type:
+          - number
+          - 'null'
+        awarded_points:
+          type:
+          - number
+          - 'null'
+        max_available_points:
+          type:
+          - number
+          - 'null'
+        five9_call_id:
+          type:
+          - string
+          - 'null'
+        agent_name:
+          type:
+          - string
+          - 'null'
+        agent_id:
+          type:
+          - string
+          - 'null'
+        customer_name:
+          type:
+          - string
+          - 'null'
+        customer_phone:
+          type:
+          - string
+          - 'null'
+        call_type:
+          type:
+          - string
+          - 'null'
+        call_reason:
+          type:
+          - string
+          - 'null'
+        direction:
+          type:
+          - string
+          - 'null'
+          examples:
+          - Inbound
+        evaluation_answers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Rubric item key → "Yes" | "No" | "N/A"
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`

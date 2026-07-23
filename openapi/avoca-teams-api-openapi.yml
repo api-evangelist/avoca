@@ -1,0 +1,101 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Teams API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Teams
+  description: Teams accessible to the API key
+paths:
+  /api/teams:
+    get:
+      tags:
+      - Teams
+      summary: List teams (v0)
+      description: List the teams the API key can access. For multi-team keys, all accessible teams; for single-team keys, the one team. Requires the `read:teams` permission.
+      operationId: listTeamsV0
+      responses:
+        '200':
+          description: Accessible teams
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  teams:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Team'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v1/teams:
+    get:
+      tags:
+      - Teams
+      summary: List teams
+      description: List all teams accessible with this API key. Requires the `read:teams` permission. Internal QA/test teams are excluded by default; pass `include_test_teams=true` to include them.
+      operationId: listTeams
+      parameters:
+      - $ref: '#/components/parameters/includeTestTeams'
+      responses:
+        '200':
+          description: Accessible teams
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Team'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+          examples:
+          - 808
+        name:
+          type: string
+          examples:
+          - Acme Plumbing
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`

@@ -1,0 +1,351 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Calls API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Calls
+  description: Call records, transcripts, and pre-call transfers
+paths:
+  /api/calls:
+    get:
+      tags:
+      - Calls
+      summary: List calls
+      description: List calls for the authenticated team. The exact columns returned are governed by the team's configured column allowlist. Requires the `read:calls` permission.
+      operationId: listCalls
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - $ref: '#/components/parameters/limit1000'
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      responses:
+        '200':
+          description: Paginated list of calls
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Call'
+                  pagination:
+                    $ref: '#/components/schemas/OffsetPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/calls/{id}:
+    get:
+      tags:
+      - Calls
+      summary: Get a call
+      description: Get a specific call by ID. Requires the `read:calls` permission.
+      operationId: getCall
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The call ID (UUID)
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/xTeamId'
+      responses:
+        '200':
+          description: The call
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Call'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/calls/{id}/transcript:
+    get:
+      tags:
+      - Calls
+      summary: Get a call transcript
+      description: Get the transcript for a specific call. Requires the `read:transcripts` permission.
+      operationId: getCallTranscript
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The call ID (UUID)
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/xTeamId'
+      responses:
+        '200':
+          description: The transcript as ordered role/content turns
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      call_id:
+                        type: string
+                        format: uuid
+                      transcript:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            role:
+                              type: string
+                              enum:
+                              - assistant
+                              - user
+                            content:
+                              type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/calls/latest-by-phone:
+    get:
+      tags:
+      - Calls
+      summary: Get latest call by phone number
+      description: Get the most recent call for a phone number. Requires the `read:calls` permission.
+      operationId: getLatestCallByPhone
+      parameters:
+      - name: phone
+        in: query
+        required: true
+        description: Phone number to search
+        schema:
+          type: string
+      - $ref: '#/components/parameters/xTeamId'
+      responses:
+        '200':
+          description: The most recent matching call
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Call'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/calls/pre-call-transfers:
+    get:
+      tags:
+      - Calls
+      summary: List pre-call transfers
+      description: 'List inbound calls that were forwarded to a configured destination *before* the AI agent picked up, based on the team''s pre-call transfer rules. These calls have `duration_seconds: 0` because the AI never engaged. Returns a fixed shape and does not honor the team''s column allowlist. Requires the `read:calls` permission.'
+      operationId: listPreCallTransfers
+      parameters:
+      - $ref: '#/components/parameters/xTeamId'
+      - $ref: '#/components/parameters/limit1000'
+      - $ref: '#/components/parameters/offset'
+      - $ref: '#/components/parameters/startDate7d'
+      - $ref: '#/components/parameters/endDateNow'
+      - name: rule_types
+        in: query
+        description: 'Comma-separated rule types to filter by. One or more of: `REJECTED_AGENT_PREVIOUSLY`, `RECENT_CALLER`, `UPCOMING_APPOINTMENTS`, `RECENT_APPOINTMENTS`, `CUSTOMER_TYPE_RESIDENTIAL`, `CUSTOMER_TYPE_COMMERCIAL`, `CALLER_PHONE_MATCH`, `CALL_REASON_MATCH`, `CUSTOMER_TAG_MATCH`.'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Paginated list of pre-call transfers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PreCallTransfer'
+                  pagination:
+                    $ref: '#/components/schemas/OffsetPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    PreCallTransfer:
+      type: object
+      properties:
+        call_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        first_name:
+          type:
+          - string
+          - 'null'
+        last_name:
+          type:
+          - string
+          - 'null'
+        phone_number:
+          type:
+          - string
+          - 'null'
+        duration_seconds:
+          type: integer
+          description: Always 0 — the AI never engaged
+          examples:
+          - 0
+        transferred_to:
+          type: string
+          examples:
+          - '+11239876543'
+        rule_id:
+          type: integer
+        rule_type:
+          type: string
+          examples:
+          - RECENT_CALLER
+        recording_url:
+          type:
+          - string
+          - 'null'
+    OffsetPagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
+    Call:
+      type: object
+      description: A call record. The exact columns returned on list endpoints are governed by the team's configured column allowlist; the fields below are the standard set.
+      properties:
+        call_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        duration_seconds:
+          type: integer
+          examples:
+          - 245
+        call_reason:
+          type:
+          - string
+          - 'null'
+          examples:
+          - Service request
+        call_outcome:
+          type:
+          - string
+          - 'null'
+          examples:
+          - Appointment booked
+        is_booked:
+          type: boolean
+        is_bookable:
+          type: boolean
+        booking_result:
+          type: string
+          enum:
+          - Booked
+          - Unbooked
+          - Excused
+          description: 'Computed from `is_booked` and `is_bookable`: Booked = call resulted in a booking; Unbooked = bookable but not booked; Excused = not a bookable opportunity'
+        is_transferred:
+          type: boolean
+        first_name:
+          type:
+          - string
+          - 'null'
+        last_name:
+          type:
+          - string
+          - 'null'
+        phone_number:
+          type:
+          - string
+          - 'null'
+          examples:
+          - '+11234567890'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+  parameters:
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
+    offset:
+      name: offset
+      in: query
+      description: Pagination offset (default 0)
+      schema:
+        type: integer
+        default: 0
+    limit1000:
+      name: limit
+      in: query
+      description: Results per page (default 100, max 1000)
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`

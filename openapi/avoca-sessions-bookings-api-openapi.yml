@@ -1,0 +1,488 @@
+openapi: 3.1.0
+info:
+  title: Avoca Enterprise Analytics (v1) Analytics (v1) Sessions & Bookings API
+  description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
+  version: 1.3.0
+servers:
+- url: https://enterprise-api.avoca.ai
+security:
+- bearerAuth: []
+tags:
+- name: Sessions & Bookings
+  description: v1 scheduling-widget sessions and completed bookings
+paths:
+  /api/v1/teams/{teamId}/schedulers:
+    get:
+      tags:
+      - Sessions & Bookings
+      summary: List schedulers
+      description: List scheduler configs for a team. Requires the `read:scheduler_analytics` permission.
+      operationId: listSchedulers
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      responses:
+        '200':
+          description: Scheduler configs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        scheduler_id:
+                          type: integer
+                        name:
+                          type: string
+                        created_at:
+                          type: string
+                          format: date-time
+                        updated_at:
+                          type: string
+                          format: date-time
+                  meta:
+                    $ref: '#/components/schemas/TeamMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/teams/{teamId}/sessions:
+    get:
+      tags:
+      - Sessions & Bookings
+      summary: List sessions
+      description: List scheduling-widget sessions for a team — a customer's journey from starting a booking to completing it or dropping off. Requires the `read:scheduler_analytics` permission.
+      operationId: listTeamSessions
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - name: status
+        in: query
+        description: Filter by session status
+        schema:
+          type: string
+          enum:
+          - booked
+          - dropped_off
+          - pending
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+                  meta:
+                    $ref: '#/components/schemas/TeamMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/teams/{teamId}/sessions/{sessionId}:
+    get:
+      tags:
+      - Sessions & Bookings
+      summary: Get a session
+      description: Get a single session by ID. Requires the `read:scheduler_analytics` permission.
+      operationId: getTeamSession
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - name: sessionId
+        in: path
+        required: true
+        description: The session ID
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Session'
+                  meta:
+                    $ref: '#/components/schemas/TeamMeta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/teams/{teamId}/bookings:
+    get:
+      tags:
+      - Sessions & Bookings
+      summary: List bookings
+      description: List bookings for a team — sessions with status `booked`. Same query parameters as sessions, minus `status`. Requires the `read:scheduler_analytics` permission.
+      operationId: listTeamBookings
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - name: scheduler_id
+        in: query
+        description: Filter to a specific scheduler
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated bookings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+                  meta:
+                    $ref: '#/components/schemas/TeamMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/teams/{teamId}/bookings/{bookingId}:
+    get:
+      tags:
+      - Sessions & Bookings
+      summary: Get a booking
+      description: Get a single booking by session ID. Returns 404 if the session exists but is not booked. Requires the `read:scheduler_analytics` permission.
+      operationId: getTeamBooking
+      parameters:
+      - $ref: '#/components/parameters/teamIdPath'
+      - name: bookingId
+        in: path
+        required: true
+        description: The session ID of the booking
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The booking
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Session'
+                  meta:
+                    $ref: '#/components/schemas/TeamMeta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/sessions:
+    get:
+      tags:
+      - Sessions & Bookings
+      summary: List sessions (cross-team)
+      description: Sessions across all teams accessible to a multi-team key. Supports the same query parameters as the team-scoped endpoint, plus an optional `team_id` filter. Requires the `read:scheduler_analytics` permission.
+      operationId: listSessions
+      parameters:
+      - name: team_id
+        in: query
+        description: Filter to one team
+        schema:
+          type: integer
+      - name: status
+        in: query
+        description: Filter by session status
+        schema:
+          type: string
+          enum:
+          - booked
+          - dropped_off
+          - pending
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/includeTestTeams'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated cross-team sessions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v1/bookings:
+    get:
+      tags:
+      - Sessions & Bookings
+      summary: List bookings (cross-team)
+      description: Bookings across all teams accessible to a multi-team key. Requires the `read:scheduler_analytics` permission.
+      operationId: listBookings
+      parameters:
+      - name: team_id
+        in: query
+        description: Filter to one team
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/includeTestTeams'
+      - $ref: '#/components/parameters/cursor'
+      - $ref: '#/components/parameters/limit500default50'
+      responses:
+        '200':
+          description: Paginated cross-team bookings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Session'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  parameters:
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    endDate:
+      name: end_date
+      in: query
+      description: Only rows before this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    limit500default50:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+  schemas:
+    Session:
+      type: object
+      description: A customer's journey through the scheduling widget — from starting a booking to completing it or dropping off.
+      properties:
+        session_id:
+          type: string
+          examples:
+          - sess_abc123
+        team_id:
+          type: integer
+        scheduler_id:
+          type: integer
+        status:
+          type: string
+          enum:
+          - booked
+          - dropped_off
+          - pending
+        customer_info:
+          type: object
+          properties:
+            name:
+              type:
+              - string
+              - 'null'
+            email:
+              type:
+              - string
+              - 'null'
+            phone:
+              type:
+              - string
+              - 'null'
+            address:
+              type:
+              - string
+              - 'null'
+        issue_type:
+          type:
+          - string
+          - 'null'
+          examples:
+          - HVAC Repair
+        job_type:
+          type:
+          - string
+          - 'null'
+        selected_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        selected_time:
+          type:
+          - string
+          - 'null'
+        utm:
+          type: object
+          properties:
+            source:
+              type:
+              - string
+              - 'null'
+            medium:
+              type:
+              - string
+              - 'null'
+            campaign:
+              type:
+              - string
+              - 'null'
+            term:
+              type:
+              - string
+              - 'null'
+            content:
+              type:
+              - string
+              - 'null'
+        google_ads:
+          type: object
+          properties:
+            gclid:
+              type:
+              - string
+              - 'null'
+            wbraid:
+              type:
+              - string
+              - 'null'
+            gbraid:
+              type:
+              - string
+              - 'null'
+        st_job_id:
+          type:
+          - integer
+          - 'null'
+          description: ServiceTitan job ID when the booking created a job
+        started_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        last_activity_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              event_type:
+                type: string
+                examples:
+                - avoca:bookingCompletion
+              created_at:
+                type: string
+                format: date-time
+    TeamMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    CursorPagination:
+      type: object
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
+        has_more:
+          type: boolean
+        limit:
+          type: integer
+  responses:
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key in the format `avoca_<64 hex characters>`
