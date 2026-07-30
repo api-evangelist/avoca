@@ -1,22 +1,259 @@
 aid: avoca
 name: Avoca
-description: 'Avoca is a company surfaced as a portfolio company of kleiner-perkins and added to the API
-  Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment
-  pipeline.'
+description: >-
+  Avoca is "The AI Front Office for Service Businesses" — always-on AI agents
+  that answer inbound calls, texts, and web chats 24/7 for home-services
+  companies (HVAC, plumbing, electrical, pest control, garage door, and
+  construction), book jobs, run multi-channel outbound re-engagement campaigns,
+  score and coach every call, and respond to leads instantly. The company
+  raised a $125M Series B at a $1B valuation and serves 1,000+ service
+  businesses. Avoca publishes an Enterprise API (bearer API-key auth over
+  https://enterprise-api.avoca.ai) that exposes read access to calls,
+  transcripts, leads, teams, coach/QA evaluations, sessions, bookings, outbound
+  texting, and Simple Scheduler analytics, plus HMAC-signed event webhooks and a
+  Speed-to-Lead intake webhook — designed for enterprise partners ingesting
+  Avoca activity into their BI warehouses and CRMs (ServiceTitan, Dialpad,
+  Five9, 3CX).
 url: https://raw.githubusercontent.com/api-evangelist/avoca/refs/heads/main/apis.yml
 x-type: company
 x-source: kleiner-perkins-portfolio
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: real-developer-surface
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
+image: https://www.avoca.ai/og-default.webp
 tags:
 - Company
-- Ai
-apis: []
+- AI
+- Voice AI
+- Conversational AI
+- Customer Service
+- Contact Center
+- Home Services
+- Field Service
+- Scheduling
+- Analytics
+- Webhooks
+- Enterprise API
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: avoca:avoca-analytics-v1-api
+  name: Avoca Analytics (v1) API
+  description: v1 funnel, UTM, service-area, and issue-type analytics
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Analytics (v1)
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-analytics-v1-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+- aid: avoca:avoca-calls-api
+  name: Avoca Calls API
+  description: Call records, transcripts, and pre-call transfers
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Calls
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-calls-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+- aid: avoca:avoca-coach-api
+  name: Avoca Coach API
+  description: Coach (QA) call evaluations and rubrics
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Coach
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-coach-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+- aid: avoca:avoca-leads-api
+  name: Avoca Leads API
+  description: Unified leads (v0) and the canonical leads feed (v1)
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Leads
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-leads-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+- aid: avoca:avoca-outbound-texting-api
+  name: Avoca Outbound Texting API
+  description: Campaign text and subscription-event feeds for BI ingestion
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Outbound Texting
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-outbound-texting-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+- aid: avoca:avoca-scheduler-analytics-v0-api
+  name: Avoca Scheduler Analytics (v0) API
+  description: Simple Scheduler analytics — legacy flat endpoints
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Scheduler Analytics (v0)
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-scheduler-analytics-v0-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+- aid: avoca:avoca-sessions-bookings-api
+  name: Avoca Sessions & Bookings API
+  description: v1 scheduling-widget sessions and completed bookings
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Sessions & Bookings
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-sessions-bookings-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+- aid: avoca:avoca-teams-api
+  name: Avoca Teams API
+  description: Teams accessible to the API key
+  humanURL: https://docs.avoca.ai/api-reference/introduction
+  baseURL: https://enterprise-api.avoca.ai
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/avoca-teams-api-openapi.yml
+  - type: Authentication
+    url: authentication/avoca-authentication.yml
+  - type: Webhooks
+    url: asyncapi/avoca-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/avoca-problem-types.yml
+  - type: Conventions
+    url: conventions/avoca-conventions.yml
+  - type: DataModel
+    url: data-model/avoca-data-model.yml
+common:
+- type: AgenticAccess
+  url: agentic-access/avoca-agentic-access.yml
+- type: DeveloperPortal
+  url: https://docs.avoca.ai
+- type: Documentation
+  url: https://docs.avoca.ai
+- type: APIReference
+  url: https://docs.avoca.ai/api-reference/introduction
+- type: GettingStarted
+  url: https://docs.avoca.ai/api-reference/introduction
+- type: Authentication
+  url: authentication/avoca-authentication.yml
+- type: Blog
+  url: https://www.avoca.ai/blog
+- type: SignUp
+  url: https://dashboard.avoca.ai/
+- type: Login
+  url: https://dashboard.avoca.ai/
+- type: TermsOfService
+  url: https://www.avoca.ai/legal/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://www.avoca.ai/legal/privacy-policy
+- type: TrustCenter
+  url: https://trust.avoca.ai
+- type: StatusPage
+  url: https://status.avoca.ai
+- type: ChangeLog
+  url: https://docs.avoca.ai/changelog
+- type: LLMsTxt
+  url: llms/avoca-llms.txt
+- type: Webhooks
+  url: asyncapi/avoca-webhooks.yml
+- type: Lifecycle
+  url: lifecycle/avoca-lifecycle.yml
+- type: Conformance
+  url: conformance/avoca-conformance.yml
+- type: DomainSecurity
+  url: security/avoca-domain-security.yml
+- type: ChangeLog
+  url: changelog/avoca-changelog.yml
+- type: AgentSkill
+  url: skills/_index.yml
