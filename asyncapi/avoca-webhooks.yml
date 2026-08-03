@@ -1,0 +1,56 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.avoca.ai/api-reference/webhooks/event-webhooks
+spec_type: Webhooks
+summary: >-
+  Avoca delivers real-time event webhooks over HTTPS POST, signed with
+  HMAC-SHA256. Subscriptions are configured per team in the dashboard or config
+  API. No AsyncAPI document is published; this is the captured webhook catalog.
+delivery:
+  transport: https-post
+  content_type: application/json
+  timeout_seconds: 10
+  endpoint:
+    https_required: true
+    max_url_length: 2048
+    custom_headers: supported (with encryption)
+  signing:
+    algorithm: HMAC-SHA256
+    signature_header: X-Webhook-Signature
+    signature_format: sha256=<hex>
+    secret: per-configuration webhook secret
+  headers:
+  - name: X-Webhook-Signature
+    description: sha256=<hex> HMAC-SHA256 of the payload using the config secret.
+  - name: X-Webhook-Timestamp
+    description: ISO 8601 delivery timestamp.
+  - name: X-Avoca-Event
+    description: The event type.
+  - name: X-Avoca-Event-Id
+    description: UUID for idempotent processing.
+  retries:
+    policy: 5 retries with exponential backoff
+    non_retriable: 4xx responses
+    retriable: 5xx and network errors
+    auto_pause_after: 50 consecutive failures
+    reset_on: any 2xx response
+    log_retention_days: 90
+events:
+- name: voice_call.completed
+  description: Fires when a call ends and is classified.
+- name: lead.created
+  description: Fires for a new lead from any intake source.
+- name: lead.booking_created
+  description: Fires when a booking is created, one per distinct CRM job.
+- name: lead.completed
+  description: >-
+    Fires when a lead reaches lifecycle end (booked, unbooked, opted out, or
+    failed).
+- name: customer.communication_preference_changed
+  description: Fires on SMS opt-in / opt-out subscription changes.
+intake_webhooks:
+- name: Speed-to-Lead Intake Webhook
+  direction: inbound
+  description: Push leads into Avoca from any source for instant AI outreach.
+  docs: https://docs.avoca.ai/api-reference/webhooks/lead-intake
+payload_docs: https://docs.avoca.ai/api-reference/webhooks/event-payloads

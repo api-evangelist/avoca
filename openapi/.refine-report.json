@@ -1,0 +1,28 @@
+{
+  "provider": "avoca",
+  "sources": [
+    "avoca-analytics-v1-api-openapi.yml",
+    "avoca-calls-api-openapi.yml",
+    "avoca-coach-api-openapi.yml",
+    "avoca-leads-api-openapi.yml",
+    "avoca-outbound-texting-api-openapi.yml",
+    "avoca-scheduler-analytics-v0-api-openapi.yml",
+    "avoca-sessions-bookings-api-openapi.yml",
+    "avoca-teams-api-openapi.yml"
+  ],
+  "outputs": [
+    "avoca-analytics-v1-api-openapi.yml",
+    "avoca-calls-api-openapi.yml",
+    "avoca-coach-api-openapi.yml",
+    "avoca-leads-api-openapi.yml",
+    "avoca-outbound-texting-api-openapi.yml",
+    "avoca-scheduler-analytics-v0-api-openapi.yml",
+    "avoca-sessions-bookings-api-openapi.yml",
+    "avoca-teams-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

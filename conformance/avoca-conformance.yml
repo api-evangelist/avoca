@@ -1,0 +1,31 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/avoca-openapi-original.json
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: openapi/avoca-openapi-original.json is OpenAPI 3.1.0
+- id: http-bearer-auth
+  conforms: true
+  evidence: securitySchemes.bearerAuth type http scheme bearer (avoca_<64 hex> API key)
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 security scheme; bearer API-key auth with permission scopes.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use a { error, message } JSON envelope, not application/problem+json.
+- id: cursor-pagination
+  conforms: true
+  evidence: Keyset cursor pagination (cursor / next_cursor / has_more) on feed endpoints.
+- id: webhooks-hmac-signing
+  conforms: true
+  evidence: Event webhooks signed with HMAC-SHA256 in X-Webhook-Signature (sha256=<hex>).
+- id: 10dlc-sms-compliance
+  conforms: true
+  evidence: Docs describe 10DLC registration and opt-out compliance for outbound SMS.
+notes: >-
+  Standards conformance derived from the OpenAPI spec and published docs. No
+  independently verified compliance certifications (SOC 2 / ISO 27001) are
+  captured — Avoca runs a Vanta trust center at https://trust.avoca.ai but the
+  named certifications are behind its request flow, so no `Compliance` claim is
+  asserted here.

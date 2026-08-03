@@ -1,0 +1,74 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/avoca-openapi-original.json
+entities:
+- name: Team
+  id: id
+  fields: [id, name]
+  note: A team is a brand/location; the primary tenant boundary.
+- name: Call
+  id: call_id
+  fields: [call_id, created_at, duration_seconds, call_reason, call_outcome, is_booked, is_bookable, booking_result, is_transferred, phone_number]
+- name: CoachCall
+  id: call_id
+  fields: [call_id, team_id, rubric_id, score, awarded_points, max_available_points, agent_id, evaluation_answers]
+  note: A QA evaluation of a call against a rubric.
+- name: LeadV1
+  id: id
+  fields: [id, team_id, created_at, status, source, external_id, customer, bookings, booked_job_id, completed_at, raw]
+  note: Canonical lead record; superset of the LeadV0 unified touchpoint view.
+- name: LeadV0
+  id: id
+  fields: [id, datetime, type, customer_phone, customer_email, attribution]
+  note: Channel-touchpoint aggregation across calls, scheduler, web chat, text, LSA.
+- name: Session
+  id: session_id
+  fields: [session_id, team_id, scheduler_id, status, issue_type, job_type, st_job_id, started_at, completed_at]
+  note: A Simple Scheduler booking journey; a booked Session is a Booking.
+- name: SchedulerConfig
+  id: id
+  fields: [id, team_id, name, created_at, updated_at]
+- name: CampaignText
+  id: customer_id
+  fields: [action, customer_id, campaign_name, customer_response, phone_number]
+- name: OutboundEvent
+  id: customer_id
+  fields: [action, customer_id, created_at, customer_phone_number]
+relationships:
+- from: Call
+  to: Team
+  kind: belongs_to
+  via: team_id
+- from: CoachCall
+  to: Call
+  kind: belongs_to
+  via: call_id
+- from: CoachCall
+  to: Team
+  kind: belongs_to
+  via: team_id
+- from: CoachCall
+  to: SchedulerConfig
+  kind: references
+  via: rubric_id
+  note: rubric_id joins to the coach rubrics reference endpoint.
+- from: LeadV1
+  to: Team
+  kind: belongs_to
+  via: team_id
+- from: Session
+  to: Team
+  kind: belongs_to
+  via: team_id
+- from: Session
+  to: SchedulerConfig
+  kind: belongs_to
+  via: scheduler_id
+- from: SchedulerConfig
+  to: Team
+  kind: belongs_to
+  via: team_id
+notes: >-
+  Derived from OpenAPI component schemas and id-reference fields. `team_id` is
+  the pervasive tenant key; leads, calls, coach evaluations, sessions, and
+  scheduler configs all hang off Team.

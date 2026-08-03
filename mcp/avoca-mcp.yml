@@ -1,0 +1,67 @@
+generated: '2026-07-18'
+method: derived
+status: candidate
+source: openapi/avoca-openapi-original.json
+note: >-
+  No official hosted/remote Avoca MCP server was found. This is a candidate tool
+  list derived one-to-one from the Enterprise API's read operations; auth would
+  be the bearer API key (avoca_<64 hex>).
+server:
+  name: avoca
+  transport: http
+  auth: bearer-api-key
+tools:
+- name: list_calls
+  description: List calls for the authenticated team.
+  source_operation: openapi/avoca-openapi-original.json#listCalls
+- name: get_call
+  description: Get a specific call by id.
+  source_operation: openapi/avoca-openapi-original.json#getCall
+- name: get_call_transcript
+  description: Get the transcript for a specific call.
+  source_operation: openapi/avoca-openapi-original.json#getCallTranscript
+- name: get_latest_call_by_phone
+  description: Get the most recent call for a phone number.
+  source_operation: openapi/avoca-openapi-original.json#getLatestCallByPhone
+- name: list_pre_call_transfers
+  description: List inbound calls forwarded before the AI engaged.
+  source_operation: openapi/avoca-openapi-original.json#listPreCallTransfers
+- name: list_leads
+  description: List unified leads (v0) across channels.
+  source_operation: openapi/avoca-openapi-original.json#listLeadsV0
+- name: list_team_leads
+  description: List the canonical single-team leads feed (v1).
+  source_operation: openapi/avoca-openapi-original.json#listTeamLeads
+- name: list_enterprise_leads
+  description: List leads across every brand in an enterprise.
+  source_operation: openapi/avoca-openapi-original.json#listEnterpriseLeads
+- name: list_teams
+  description: List teams accessible with this API key.
+  source_operation: openapi/avoca-openapi-original.json#listTeams
+- name: list_coach_calls
+  description: List coach (QA) call evaluations.
+  source_operation: openapi/avoca-openapi-original.json#listCoachCalls
+- name: get_coach_call
+  description: Get a single coach call evaluation.
+  source_operation: openapi/avoca-openapi-original.json#getCoachCall
+- name: list_coach_rubrics
+  description: List the team's enabled coach rubrics.
+  source_operation: openapi/avoca-openapi-original.json#listCoachRubrics
+- name: get_scheduler_analytics
+  description: Get detailed Simple Scheduler analytics.
+  source_operation: openapi/avoca-openapi-original.json#getSchedulerAnalytics
+- name: get_team_funnel
+  description: Get funnel analytics for a team.
+  source_operation: openapi/avoca-openapi-original.json#getTeamFunnel
+- name: list_team_sessions
+  description: List scheduling-widget sessions for a team.
+  source_operation: openapi/avoca-openapi-original.json#listTeamSessions
+- name: list_team_bookings
+  description: List bookings for a team.
+  source_operation: openapi/avoca-openapi-original.json#listTeamBookings
+- name: list_campaign_texts
+  description: List outbound campaign texts for a team.
+  source_operation: openapi/avoca-openapi-original.json#listCampaignTexts
+- name: list_outbound_events
+  description: List outbound customer events for a team.
+  source_operation: openapi/avoca-openapi-original.json#listOutboundEvents

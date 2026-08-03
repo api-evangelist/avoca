@@ -1,0 +1,324 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/avoca-openapi-original.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 31
+  by_action_class:
+    connected: 31
+  by_consequence:
+    read: 31
+  human_in_the_loop_required: 0
+operations:
+- path: /api/calls
+  method: get
+  operationId: listCalls
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/calls/{id}
+  method: get
+  operationId: getCall
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/calls/{id}/transcript
+  method: get
+  operationId: getCallTranscript
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/calls/latest-by-phone
+  method: get
+  operationId: getLatestCallByPhone
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/calls/pre-call-transfers
+  method: get
+  operationId: listPreCallTransfers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/leads
+  method: get
+  operationId: listLeadsV0
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/teams
+  method: get
+  operationId: listTeamsV0
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coach
+  method: get
+  operationId: listCoachCalls
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coach/{id}
+  method: get
+  operationId: getCoachCall
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coach/rubrics
+  method: get
+  operationId: listCoachRubrics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/scheduler-analytics
+  method: get
+  operationId: getSchedulerAnalytics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/scheduler-analytics/summary
+  method: get
+  operationId: getSchedulerAnalyticsSummary
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/simple_scheduler_booking_requests
+  method: get
+  operationId: listSimpleSchedulerBookingRequests
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/simple_scheduler_config
+  method: get
+  operationId: listSimpleSchedulerConfigs
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams
+  method: get
+  operationId: listTeams
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/schedulers
+  method: get
+  operationId: listSchedulers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/sessions
+  method: get
+  operationId: listTeamSessions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/sessions/{sessionId}
+  method: get
+  operationId: getTeamSession
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/bookings
+  method: get
+  operationId: listTeamBookings
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/bookings/{bookingId}
+  method: get
+  operationId: getTeamBooking
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/analytics/funnel
+  method: get
+  operationId: getTeamFunnel
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/analytics/utm
+  method: get
+  operationId: getTeamUtm
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/analytics/service-areas
+  method: get
+  operationId: getTeamServiceAreas
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/analytics/issue-types
+  method: get
+  operationId: getTeamIssueTypes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/leads
+  method: get
+  operationId: listTeamLeads
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/outbound/campaign-texts
+  method: get
+  operationId: listCampaignTexts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/teams/{teamId}/outbound/events
+  method: get
+  operationId: listOutboundEvents
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/enterprise/{enterpriseId}/leads
+  method: get
+  operationId: listEnterpriseLeads
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/sessions
+  method: get
+  operationId: listSessions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/bookings
+  method: get
+  operationId: listBookings
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/analytics/funnel
+  method: get
+  operationId: getFunnel
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

@@ -1,0 +1,31 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/avoca-openapi-original.json
+format: json
+envelope:
+  description: >-
+    Errors return a JSON body with a machine `error` type and, on newer
+    endpoints, a human-readable `message`. Not RFC 9457 problem+json.
+  schema:
+    error: string   # required — error type
+    message: string # optional — human-readable description (newer endpoints)
+problems:
+- status: 400
+  title: Bad Request
+  meaning: Invalid or malformed query parameters (bad pagination cursor, date range, etc.).
+- status: 401
+  title: Unauthorized
+  meaning: 'Missing, malformed, or invalid API key (expected an `Authorization: Bearer avoca_<64 hex>` header).'
+- status: 403
+  title: Forbidden
+  meaning: >-
+    The API key lacks the permission scope required by the endpoint, or a
+    single-team/portfolio key attempted a route reserved for
+    enterprise_all_teams keys.
+- status: 404
+  title: Not Found
+  meaning: The requested resource (call, session, booking, coach evaluation) does not exist or is not visible to the key.
+notes: >-
+  Derived from the OpenAPI responses (400/401/403/404) which reference the
+  shared `Error` schema. Descriptions enriched from the authentication and
+  endpoint docs.

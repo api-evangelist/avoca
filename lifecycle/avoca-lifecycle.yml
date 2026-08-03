@@ -1,0 +1,26 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.avoca.ai
+versioning:
+  scheme: uri-path
+  versions: [v0, v1]
+  current: v1
+  spec_version: 1.3.0
+  docs: https://docs.avoca.ai/api-reference/introduction
+changelog:
+  url: https://docs.avoca.ai/changelog
+  per_product: true
+status_page: https://status.avoca.ai
+status_page_alt: https://avoca.statuspage.io
+deprecation:
+  policy_url: null
+  sunset_header: null
+  note: >-
+    No formal deprecation/Sunset (RFC 8594) policy is published. v0 and v1
+    endpoints coexist; v1 is the current team-scoped generation.
+deprecated_operations: []
+notes: >-
+  Status page confirmed live (status.avoca.ai, Statuspage-backed). Product
+  changelogs are published per area (Platform, Voice, SMS, Outbound Campaigns,
+  Coach, Simple Scheduler, Speed-to-Lead, Workflows, Responder, Email,
+  Analytics Coach).

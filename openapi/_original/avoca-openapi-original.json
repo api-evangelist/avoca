@@ -1,0 +1,3451 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Avoca Enterprise API",
+    "description": "Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.",
+    "version": "1.3.0"
+  },
+  "servers": [
+    {
+      "url": "https://enterprise-api.avoca.ai"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Calls",
+      "description": "Call records, transcripts, and pre-call transfers"
+    },
+    {
+      "name": "Leads",
+      "description": "Unified leads (v0) and the canonical leads feed (v1)"
+    },
+    {
+      "name": "Teams",
+      "description": "Teams accessible to the API key"
+    },
+    {
+      "name": "Coach",
+      "description": "Coach (QA) call evaluations and rubrics"
+    },
+    {
+      "name": "Scheduler Analytics (v0)",
+      "description": "Simple Scheduler analytics — legacy flat endpoints"
+    },
+    {
+      "name": "Sessions & Bookings",
+      "description": "v1 scheduling-widget sessions and completed bookings"
+    },
+    {
+      "name": "Analytics (v1)",
+      "description": "v1 funnel, UTM, service-area, and issue-type analytics"
+    },
+    {
+      "name": "Outbound Texting",
+      "description": "Campaign text and subscription-event feeds for BI ingestion"
+    }
+  ],
+  "paths": {
+    "/api/calls": {
+      "get": {
+        "tags": [
+          "Calls"
+        ],
+        "summary": "List calls",
+        "description": "List calls for the authenticated team. The exact columns returned are governed by the team's configured column allowlist. Requires the `read:calls` permission.",
+        "operationId": "listCalls",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "$ref": "#/components/parameters/limit1000"
+          },
+          {
+            "$ref": "#/components/parameters/offset"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of calls",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Call"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/OffsetPagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/calls/{id}": {
+      "get": {
+        "tags": [
+          "Calls"
+        ],
+        "summary": "Get a call",
+        "description": "Get a specific call by ID. Requires the `read:calls` permission.",
+        "operationId": "getCall",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The call ID (UUID)",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The call",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Call"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/calls/{id}/transcript": {
+      "get": {
+        "tags": [
+          "Calls"
+        ],
+        "summary": "Get a call transcript",
+        "description": "Get the transcript for a specific call. Requires the `read:transcripts` permission.",
+        "operationId": "getCallTranscript",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The call ID (UUID)",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The transcript as ordered role/content turns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "call_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "transcript": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "assistant",
+                                  "user"
+                                ]
+                              },
+                              "content": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/calls/latest-by-phone": {
+      "get": {
+        "tags": [
+          "Calls"
+        ],
+        "summary": "Get latest call by phone number",
+        "description": "Get the most recent call for a phone number. Requires the `read:calls` permission.",
+        "operationId": "getLatestCallByPhone",
+        "parameters": [
+          {
+            "name": "phone",
+            "in": "query",
+            "required": true,
+            "description": "Phone number to search",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The most recent matching call",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Call"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/calls/pre-call-transfers": {
+      "get": {
+        "tags": [
+          "Calls"
+        ],
+        "summary": "List pre-call transfers",
+        "description": "List inbound calls that were forwarded to a configured destination *before* the AI agent picked up, based on the team's pre-call transfer rules. These calls have `duration_seconds: 0` because the AI never engaged. Returns a fixed shape and does not honor the team's column allowlist. Requires the `read:calls` permission.",
+        "operationId": "listPreCallTransfers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "$ref": "#/components/parameters/limit1000"
+          },
+          {
+            "$ref": "#/components/parameters/offset"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "name": "rule_types",
+            "in": "query",
+            "description": "Comma-separated rule types to filter by. One or more of: `REJECTED_AGENT_PREVIOUSLY`, `RECENT_CALLER`, `UPCOMING_APPOINTMENTS`, `RECENT_APPOINTMENTS`, `CUSTOMER_TYPE_RESIDENTIAL`, `CUSTOMER_TYPE_COMMERCIAL`, `CALLER_PHONE_MATCH`, `CALL_REASON_MATCH`, `CUSTOMER_TAG_MATCH`.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of pre-call transfers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PreCallTransfer"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/OffsetPagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/leads": {
+      "get": {
+        "tags": [
+          "Leads"
+        ],
+        "summary": "List unified leads (v0)",
+        "description": "Channel-touchpoint aggregation of leads across calls, the scheduling widget, web chat, text, and Google LSA. This is **not** the canonical leads record and does not include the raw third-party payload — for that, use the v1 leads feed (`GET /api/v1/teams/{teamId}/leads`). Requires the `read:leads` permission.",
+        "operationId": "listLeadsV0",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by lead type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "call",
+                "scheduling_widget",
+                "web_chat",
+                "text",
+                "google_lsa"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit1000"
+          },
+          {
+            "$ref": "#/components/parameters/offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of unified leads",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LeadV0"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/OffsetPagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/teams": {
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "List teams (v0)",
+        "description": "List the teams the API key can access. For multi-team keys, all accessible teams; for single-team keys, the one team. Requires the `read:teams` permission.",
+        "operationId": "listTeamsV0",
+        "responses": {
+          "200": {
+            "description": "Accessible teams",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "teams": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Team"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/coach": {
+      "get": {
+        "tags": [
+          "Coach"
+        ],
+        "summary": "List coach call evaluations",
+        "description": "List evaluated coach (QA) calls for the team, newest first. Each row includes the score, awarded/max points, per-item evaluation answers, and the `rubric_id` for joining to `GET /api/coach/rubrics`. Requires the `read:coach` permission.",
+        "operationId": "listCoachCalls",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "$ref": "#/components/parameters/limit1000"
+          },
+          {
+            "$ref": "#/components/parameters/offset"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of coach calls",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CoachCall"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/OffsetPagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/coach/{id}": {
+      "get": {
+        "tags": [
+          "Coach"
+        ],
+        "summary": "Get a coach call evaluation",
+        "description": "Get a single evaluated coach call by its numeric ID. Requires the `read:coach` permission.",
+        "operationId": "getCoachCall",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Coach call ID (number)",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The coach call",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CoachCall"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/coach/rubrics": {
+      "get": {
+        "tags": [
+          "Coach"
+        ],
+        "summary": "List coach rubrics",
+        "description": "Reference endpoint: lists the team's enabled rubrics. Items provide the key → name mapping for the `evaluation_answers` keys returned on coach calls. Requires the `read:coach` permission.",
+        "operationId": "listCoachRubrics",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Enabled rubrics with item key/name pairs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "key": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/scheduler-analytics": {
+      "get": {
+        "tags": [
+          "Scheduler Analytics (v0)"
+        ],
+        "summary": "Get scheduler analytics",
+        "description": "Detailed Simple Scheduler analytics. Select which metric blocks to include with the `metrics` parameter: `funnel`, `bookings`, `chart`, `utm`, `google_ads`, `service_areas`, `issue_types`, `customer_events`. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getSchedulerAnalytics",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "metrics",
+            "in": "query",
+            "description": "Comma-separated metric blocks to include (default: all)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit1000"
+          },
+          {
+            "$ref": "#/components/parameters/offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Requested analytics blocks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SchedulerAnalytics"
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/OffsetPagination"
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "startDate": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "endDate": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "timezone": {
+                          "type": "string"
+                        },
+                        "schedulerId": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "metricsRequested": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/scheduler-analytics/summary": {
+      "get": {
+        "tags": [
+          "Scheduler Analytics (v0)"
+        ],
+        "summary": "Get scheduler analytics summary",
+        "description": "Summary Simple Scheduler stats for today, this week, and this month. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getSchedulerAnalyticsSummary",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "today": {
+                          "$ref": "#/components/schemas/PeriodSummary"
+                        },
+                        "thisWeek": {
+                          "$ref": "#/components/schemas/PeriodSummary"
+                        },
+                        "thisMonth": {
+                          "$ref": "#/components/schemas/PeriodSummary"
+                        }
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "timezone": {
+                          "type": "string"
+                        },
+                        "generatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/simple_scheduler_booking_requests": {
+      "get": {
+        "tags": [
+          "Scheduler Analytics (v0)"
+        ],
+        "summary": "List Simple Scheduler booking requests",
+        "description": "Booking requests submitted through Simple Scheduler. Supports offset pagination (`offset` + `limit`, returns `meta.total`) or cursor pagination (`cursor` = `created_at` from a previous page; response includes `next_cursor` and `has_more`). Requires the `read:scheduler_analytics` permission.",
+        "operationId": "listSimpleSchedulerBookingRequests",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by request status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "has_utm",
+            "in": "query",
+            "description": "When `true`, only requests with UTM attribution",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "ISO 8601 `created_at` cursor from a previous page (cursor mode)",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit500"
+          },
+          {
+            "$ref": "#/components/parameters/offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "team_id": {
+                            "type": "integer"
+                          },
+                          "scheduler_id": {
+                            "type": "integer"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "st_job_id": {
+                            "type": [
+                              "integer",
+                              "null"
+                            ],
+                            "description": "ServiceTitan job ID when the request produced a job"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "request_data": {
+                            "type": "object",
+                            "description": "Raw booking request payload"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "Total rows (offset mode only)"
+                        },
+                        "next_cursor": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "Cursor for the next page (cursor mode)"
+                        },
+                        "has_more": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/simple_scheduler_config": {
+      "get": {
+        "tags": [
+          "Scheduler Analytics (v0)"
+        ],
+        "summary": "List Simple Scheduler configs",
+        "description": "Scheduler configurations for the team. Team is resolved from `x-team-id` or the optional `team_id` query parameter (multi-team keys must have access to that team). Requires the `read:scheduler_analytics` permission.",
+        "operationId": "listSimpleSchedulerConfigs",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/xTeamId"
+          },
+          {
+            "name": "team_id",
+            "in": "query",
+            "description": "Target team (alternative to the x-team-id header for multi-team keys)",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scheduler configs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SchedulerConfig"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams": {
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "summary": "List teams",
+        "description": "List all teams accessible with this API key. Requires the `read:teams` permission. Internal QA/test teams are excluded by default; pass `include_test_teams=true` to include them.",
+        "operationId": "listTeams",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/includeTestTeams"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Accessible teams",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Team"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/schedulers": {
+      "get": {
+        "tags": [
+          "Sessions & Bookings"
+        ],
+        "summary": "List schedulers",
+        "description": "List scheduler configs for a team. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "listSchedulers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scheduler configs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "scheduler_id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TeamMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/sessions": {
+      "get": {
+        "tags": [
+          "Sessions & Bookings"
+        ],
+        "summary": "List sessions",
+        "description": "List scheduling-widget sessions for a team — a customer's journey from starting a booking to completing it or dropping off. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "listTeamSessions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by session status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "booked",
+                "dropped_off",
+                "pending"
+              ]
+            }
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated sessions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Session"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TeamMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/sessions/{sessionId}": {
+      "get": {
+        "tags": [
+          "Sessions & Bookings"
+        ],
+        "summary": "Get a session",
+        "description": "Get a single session by ID. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getTeamSession",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "description": "The session ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Session"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TeamMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/bookings": {
+      "get": {
+        "tags": [
+          "Sessions & Bookings"
+        ],
+        "summary": "List bookings",
+        "description": "List bookings for a team — sessions with status `booked`. Same query parameters as sessions, minus `status`. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "listTeamBookings",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated bookings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Session"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TeamMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/bookings/{bookingId}": {
+      "get": {
+        "tags": [
+          "Sessions & Bookings"
+        ],
+        "summary": "Get a booking",
+        "description": "Get a single booking by session ID. Returns 404 if the session exists but is not booked. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getTeamBooking",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "name": "bookingId",
+            "in": "path",
+            "required": true,
+            "description": "The session ID of the booking",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The booking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Session"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TeamMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/analytics/funnel": {
+      "get": {
+        "tags": [
+          "Analytics (v1)"
+        ],
+        "summary": "Get funnel analytics",
+        "description": "Funnel metrics with drop-off data. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getTeamFunnel",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Funnel metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Funnel"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/AnalyticsMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/analytics/utm": {
+      "get": {
+        "tags": [
+          "Analytics (v1)"
+        ],
+        "summary": "Get UTM attribution",
+        "description": "UTM attribution data. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getTeamUtm",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "UTM attribution rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/UtmRow"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/AnalyticsMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/analytics/service-areas": {
+      "get": {
+        "tags": [
+          "Analytics (v1)"
+        ],
+        "summary": "Get service-area distribution",
+        "description": "Distribution of service-area lookups. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getTeamServiceAreas",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service-area distribution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "serviceArea": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/AnalyticsMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/analytics/issue-types": {
+      "get": {
+        "tags": [
+          "Analytics (v1)"
+        ],
+        "summary": "Get issue-type distribution",
+        "description": "Distribution of issue types selected in the scheduler. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getTeamIssueTypes",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          },
+          {
+            "name": "scheduler_id",
+            "in": "query",
+            "description": "Filter to a specific scheduler",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Issue-type distribution",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "issueType": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/AnalyticsMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/leads": {
+      "get": {
+        "tags": [
+          "Leads"
+        ],
+        "summary": "List leads (single team)",
+        "description": "The canonical leads feed for one team: the historical/pull counterpart to the `lead.*` event webhooks, including the raw third-party payload. Keyset cursor-paginated ascending by `(created_at, id)`. Leads from registered test phone numbers are excluded by default (`include_test_numbers=true` opts in). Requires the `read:leads` permission.",
+        "operationId": "listTeamLeads",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "$ref": "#/components/parameters/leadsStartDate"
+          },
+          {
+            "$ref": "#/components/parameters/leadsEndDate"
+          },
+          {
+            "$ref": "#/components/parameters/leadsMedium"
+          },
+          {
+            "$ref": "#/components/parameters/leadsSource"
+          },
+          {
+            "$ref": "#/components/parameters/leadsStatus"
+          },
+          {
+            "$ref": "#/components/parameters/leadsIncludeRaw"
+          },
+          {
+            "$ref": "#/components/parameters/leadsIncludeIgnored"
+          },
+          {
+            "$ref": "#/components/parameters/leadsIncludeTestNumbers"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated leads",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LeadV1"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TeamMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/outbound/campaign-texts": {
+      "get": {
+        "tags": [
+          "Outbound Texting"
+        ],
+        "summary": "List campaign texts",
+        "description": "One row per initial outbound campaign text message, including the customer's first reply. Designed for partners ingesting Avoca outbound activity into a BI warehouse. Always scoped to the team in the URL path. Requires the `read:outbound` permission.",
+        "operationId": "listCampaignTexts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "name": "campaign_name",
+            "in": "query",
+            "required": true,
+            "description": "Campaign to return texts for",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated campaign texts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CampaignText"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "team_id": {
+                          "type": "integer"
+                        },
+                        "campaign_name": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/teams/{teamId}/outbound/events": {
+      "get": {
+        "tags": [
+          "Outbound Texting"
+        ],
+        "summary": "List outbound customer events",
+        "description": "Customer events over time (multiple rows per customer): outbound messages and subscription (opt-in/opt-out) changes. Subscription events reflect each phone's *current* state, timestamped by its last change — at most one subscription event per phone. Requires the `read:outbound` permission.",
+        "operationId": "listOutboundEvents",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/teamIdPath"
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "description": "Filter to one action",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "outbound_message",
+                "customer_subscribed",
+                "customer_unsubscribed"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated outbound events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OutboundEvent"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/TeamMeta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/enterprise/{enterpriseId}/leads": {
+      "get": {
+        "tags": [
+          "Leads"
+        ],
+        "summary": "List leads (all brands)",
+        "description": "The canonical leads feed across every team (brand) in the enterprise. Requires an `enterprise_all_teams` key whose enterprise matches the path — single-team and portfolio keys receive 403. Every row carries `team_id`. Same query parameters as the single-team feed. Requires the `read:leads` permission.",
+        "operationId": "listEnterpriseLeads",
+        "parameters": [
+          {
+            "name": "enterpriseId",
+            "in": "path",
+            "required": true,
+            "description": "The enterprise ID",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/leadsStartDate"
+          },
+          {
+            "$ref": "#/components/parameters/leadsEndDate"
+          },
+          {
+            "$ref": "#/components/parameters/leadsMedium"
+          },
+          {
+            "$ref": "#/components/parameters/leadsSource"
+          },
+          {
+            "$ref": "#/components/parameters/leadsStatus"
+          },
+          {
+            "$ref": "#/components/parameters/leadsIncludeRaw"
+          },
+          {
+            "$ref": "#/components/parameters/leadsIncludeIgnored"
+          },
+          {
+            "$ref": "#/components/parameters/leadsIncludeTestNumbers"
+          },
+          {
+            "$ref": "#/components/parameters/includeTestTeams"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated leads across all brands",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LeadV1"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "enterprise_id": {
+                          "type": "integer"
+                        },
+                        "team_ids": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/api/v1/sessions": {
+      "get": {
+        "tags": [
+          "Sessions & Bookings"
+        ],
+        "summary": "List sessions (cross-team)",
+        "description": "Sessions across all teams accessible to a multi-team key. Supports the same query parameters as the team-scoped endpoint, plus an optional `team_id` filter. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "listSessions",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "query",
+            "description": "Filter to one team",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by session status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "booked",
+                "dropped_off",
+                "pending"
+              ]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/includeTestTeams"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated cross-team sessions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Session"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/bookings": {
+      "get": {
+        "tags": [
+          "Sessions & Bookings"
+        ],
+        "summary": "List bookings (cross-team)",
+        "description": "Bookings across all teams accessible to a multi-team key. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "listBookings",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "query",
+            "description": "Filter to one team",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/includeTestTeams"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          },
+          {
+            "$ref": "#/components/parameters/limit500default50"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated cross-team bookings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Session"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/CursorPagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/funnel": {
+      "get": {
+        "tags": [
+          "Analytics (v1)"
+        ],
+        "summary": "Get funnel analytics (cross-team)",
+        "description": "Aggregated funnel data across all teams accessible to a multi-team key, with an optional `team_id` filter. Requires the `read:scheduler_analytics` permission.",
+        "operationId": "getFunnel",
+        "parameters": [
+          {
+            "name": "team_id",
+            "in": "query",
+            "description": "Filter to one team",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/startDate7d"
+          },
+          {
+            "$ref": "#/components/parameters/endDateNow"
+          },
+          {
+            "$ref": "#/components/parameters/timezone"
+          },
+          {
+            "$ref": "#/components/parameters/includeTestTeams"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Aggregated funnel metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Funnel"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key in the format `avoca_<64 hex characters>`"
+      }
+    },
+    "parameters": {
+      "xTeamId": {
+        "name": "x-team-id",
+        "in": "header",
+        "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "teamIdPath": {
+        "name": "teamId",
+        "in": "path",
+        "required": true,
+        "description": "The team ID",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "limit1000": {
+        "name": "limit",
+        "in": "query",
+        "description": "Results per page (default 100, max 1000)",
+        "schema": {
+          "type": "integer",
+          "default": 100,
+          "maximum": 1000
+        }
+      },
+      "limit500": {
+        "name": "limit",
+        "in": "query",
+        "description": "Results per page (default 50, max 500)",
+        "schema": {
+          "type": "integer",
+          "default": 50,
+          "maximum": 500
+        }
+      },
+      "limit500default50": {
+        "name": "limit",
+        "in": "query",
+        "description": "Results per page (default 50, max 500)",
+        "schema": {
+          "type": "integer",
+          "default": 50,
+          "maximum": 500
+        }
+      },
+      "offset": {
+        "name": "offset",
+        "in": "query",
+        "description": "Pagination offset (default 0)",
+        "schema": {
+          "type": "integer",
+          "default": 0
+        }
+      },
+      "cursor": {
+        "name": "cursor",
+        "in": "query",
+        "description": "Opaque pagination cursor from the previous response's `pagination.cursor`",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "startDate": {
+        "name": "start_date",
+        "in": "query",
+        "description": "Only rows on/after this ISO 8601 timestamp",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "endDate": {
+        "name": "end_date",
+        "in": "query",
+        "description": "Only rows before this ISO 8601 timestamp",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "startDate7d": {
+        "name": "start_date",
+        "in": "query",
+        "description": "Start of date range (ISO 8601; default 7 days ago)",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "endDateNow": {
+        "name": "end_date",
+        "in": "query",
+        "description": "End of date range (ISO 8601; default now)",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "timezone": {
+        "name": "timezone",
+        "in": "query",
+        "description": "IANA timezone for date calculations (default America/New_York)",
+        "schema": {
+          "type": "string",
+          "default": "America/New_York"
+        }
+      },
+      "includeTestTeams": {
+        "name": "include_test_teams",
+        "in": "query",
+        "description": "Include designated internal QA/test teams in multi-team aggregations (default false)",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "leadsStartDate": {
+        "name": "start_date",
+        "in": "query",
+        "description": "Inclusive lower bound on `created_at` (>=)",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "leadsEndDate": {
+        "name": "end_date",
+        "in": "query",
+        "description": "Exclusive upper bound on `created_at` (<)",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "leadsMedium": {
+        "name": "medium",
+        "in": "query",
+        "description": "Lead-source medium",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "webhook",
+            "email_alerts",
+            "st_bookings_alerts",
+            "st_native",
+            "google_lsa",
+            "yelp",
+            "web_chat",
+            "dropped_responder"
+          ]
+        }
+      },
+      "leadsSource": {
+        "name": "source",
+        "in": "query",
+        "description": "Lead-source canonical `name` (exact match)",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "leadsStatus": {
+        "name": "status",
+        "in": "query",
+        "description": "Lead processing status",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "created",
+            "queued",
+            "processing",
+            "completed",
+            "failed",
+            "skipped"
+          ]
+        }
+      },
+      "leadsIncludeRaw": {
+        "name": "include_raw",
+        "in": "query",
+        "description": "When `false`, omit the `raw` third-party payload field (default true)",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "leadsIncludeIgnored": {
+        "name": "include_ignored",
+        "in": "query",
+        "description": "When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "leadsIncludeTestNumbers": {
+        "name": "include_test_numbers",
+        "in": "query",
+        "description": "When `true`, include leads from the team's registered test phone numbers (default false)",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Missing or invalid API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "API key lacks the required permission or team access",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error type"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable description (newer endpoints)"
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "OffsetPagination": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "has_more": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CursorPagination": {
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page"
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer"
+          }
+        }
+      },
+      "TeamMeta": {
+        "type": "object",
+        "properties": {
+          "team_id": {
+            "type": "integer"
+          }
+        }
+      },
+      "AnalyticsMeta": {
+        "type": "object",
+        "properties": {
+          "team_id": {
+            "type": "integer"
+          },
+          "start_date": {
+            "type": "string"
+          },
+          "end_date": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          }
+        }
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "examples": [
+              808
+            ]
+          },
+          "name": {
+            "type": "string",
+            "examples": [
+              "Acme Plumbing"
+            ]
+          }
+        }
+      },
+      "Call": {
+        "type": "object",
+        "description": "A call record. The exact columns returned on list endpoints are governed by the team's configured column allowlist; the fields below are the standard set.",
+        "properties": {
+          "call_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_seconds": {
+            "type": "integer",
+            "examples": [
+              245
+            ]
+          },
+          "call_reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "examples": [
+              "Service request"
+            ]
+          },
+          "call_outcome": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "examples": [
+              "Appointment booked"
+            ]
+          },
+          "is_booked": {
+            "type": "boolean"
+          },
+          "is_bookable": {
+            "type": "boolean"
+          },
+          "booking_result": {
+            "type": "string",
+            "enum": [
+              "Booked",
+              "Unbooked",
+              "Excused"
+            ],
+            "description": "Computed from `is_booked` and `is_bookable`: Booked = call resulted in a booking; Unbooked = bookable but not booked; Excused = not a bookable opportunity"
+          },
+          "is_transferred": {
+            "type": "boolean"
+          },
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone_number": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "examples": [
+              "+11234567890"
+            ]
+          }
+        }
+      },
+      "PreCallTransfer": {
+        "type": "object",
+        "properties": {
+          "call_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "phone_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "duration_seconds": {
+            "type": "integer",
+            "description": "Always 0 — the AI never engaged",
+            "examples": [
+              0
+            ]
+          },
+          "transferred_to": {
+            "type": "string",
+            "examples": [
+              "+11239876543"
+            ]
+          },
+          "rule_id": {
+            "type": "integer"
+          },
+          "rule_type": {
+            "type": "string",
+            "examples": [
+              "RECENT_CALLER"
+            ]
+          },
+          "recording_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "LeadV0": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "datetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "call",
+              "scheduling_widget",
+              "web_chat",
+              "text",
+              "google_lsa"
+            ]
+          },
+          "customer_phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "customer_email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "lead_content": {
+            "type": "object",
+            "description": "Channel-specific lead content"
+          },
+          "agent": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Assistant ID that handled the touchpoint"
+          },
+          "referrer_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attribution": {
+            "type": "object",
+            "properties": {
+              "utm_source": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "gclid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "LeadV1": {
+        "type": "object",
+        "description": "A canonical lead record — the pull counterpart to the `lead.*` event webhooks.",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "examples": [
+              12345
+            ]
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queued",
+              "processing",
+              "completed",
+              "failed",
+              "skipped"
+            ]
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string",
+                "examples": [
+                  "angi"
+                ]
+              },
+              "display_name": {
+                "type": "string",
+                "examples": [
+                  "Angi"
+                ]
+              },
+              "medium": {
+                "type": "string",
+                "examples": [
+                  "webhook"
+                ]
+              }
+            }
+          },
+          "external_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Third-party reference ID"
+          },
+          "customer": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone_number": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "street": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "zip": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "country": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "notes": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "attribution": {
+            "type": "object",
+            "properties": {
+              "utm_source": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "utm_medium": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "utm_campaign": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "utm_term": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "utm_content": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "contacted": {
+            "type": "boolean",
+            "description": "Whether any outreach touchpoint has occurred for this lead"
+          },
+          "not_contacted_reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Why the lead has not been contacted, when `contacted` is false"
+          },
+          "bookings": {
+            "type": "array",
+            "description": "Bookings attributed to this lead, deduped by CRM job ID and sorted earliest-first",
+            "items": {
+              "type": "object",
+              "properties": {
+                "st_job_id": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "booked_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "job_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "booked_job_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "CRM job ID of the first booking, when present"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "raw": {
+            "type": "object",
+            "description": "Original third-party payload (omit with `include_raw=false`)"
+          }
+        }
+      },
+      "CoachCall": {
+        "type": "object",
+        "description": "An evaluated coach (QA) call. `evaluation_answers` maps rubric item keys to \"Yes\" / \"No\" / \"N/A\" — join to `GET /api/coach/rubrics` via `rubric_id` for item names.",
+        "properties": {
+          "call_id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "rubric_id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "call_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "call_time_local": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "examples": [
+              "14:32:05"
+            ]
+          },
+          "duration_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "awarded_points": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "max_available_points": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "five9_call_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "agent_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "agent_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "customer_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "customer_phone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "call_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "call_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "direction": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "examples": [
+              "Inbound"
+            ]
+          },
+          "evaluation_answers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Rubric item key → \"Yes\" | \"No\" | \"N/A\""
+          }
+        }
+      },
+      "SchedulerConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PeriodSummary": {
+        "type": "object",
+        "properties": {
+          "sessions": {
+            "type": "integer",
+            "examples": [
+              312
+            ]
+          },
+          "bookings": {
+            "type": "integer",
+            "examples": [
+              89
+            ]
+          },
+          "conversionRate": {
+            "type": "number",
+            "examples": [
+              28.5
+            ]
+          }
+        }
+      },
+      "SchedulerAnalytics": {
+        "type": "object",
+        "description": "Metric blocks are present only when requested via the `metrics` parameter (default: all).",
+        "properties": {
+          "funnel": {
+            "type": "object",
+            "properties": {
+              "sessions": {
+                "type": "integer"
+              },
+              "bookingStarted": {
+                "type": "integer"
+              },
+              "customerInfoCompleted": {
+                "type": "integer"
+              },
+              "bookingCompleted": {
+                "type": "integer"
+              },
+              "conversionRate": {
+                "type": "number"
+              }
+            }
+          },
+          "bookings": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "avgBookingTimeSeconds": {
+                "type": "number"
+              }
+            }
+          },
+          "chartData": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "sessions": {
+                  "type": "integer"
+                },
+                "conversions": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "utmData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UtmRow"
+            }
+          },
+          "googleAdsData": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "gclid": {
+                  "type": "string"
+                },
+                "wbraid": {
+                  "type": "string"
+                },
+                "gbraid": {
+                  "type": "string"
+                },
+                "sessions": {
+                  "type": "integer"
+                },
+                "conversions": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "serviceAreaData": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "serviceArea": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "issueTypeData": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "issueType": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "customerEvents": {
+            "type": "array",
+            "description": "Individual customer sessions with PII (paginated via `limit`/`offset`)",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sessionId": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "customerInfo": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "email": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "phone": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "address": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "issueType": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "jobType": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "selectedDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "selectedTime": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "utmSource": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "gclid": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "conversionValue": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "lastActivity": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UtmRow": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "examples": [
+              "google"
+            ]
+          },
+          "medium": {
+            "type": "string",
+            "examples": [
+              "cpc"
+            ]
+          },
+          "campaign": {
+            "type": "string"
+          },
+          "term": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "sessions": {
+            "type": "integer"
+          },
+          "conversions": {
+            "type": "integer"
+          }
+        }
+      },
+      "Funnel": {
+        "type": "object",
+        "properties": {
+          "sessions": {
+            "type": "integer",
+            "examples": [
+              1250
+            ]
+          },
+          "booking_started": {
+            "type": "integer"
+          },
+          "customer_info_completed": {
+            "type": "integer"
+          },
+          "booking_completed": {
+            "type": "integer"
+          },
+          "conversion_rate": {
+            "type": "number",
+            "examples": [
+              34
+            ]
+          },
+          "drop_off_count": {
+            "type": "integer"
+          },
+          "drop_off_rate": {
+            "type": "number",
+            "examples": [
+              66
+            ]
+          }
+        }
+      },
+      "Session": {
+        "type": "object",
+        "description": "A customer's journey through the scheduling widget — from starting a booking to completing it or dropping off.",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "examples": [
+              "sess_abc123"
+            ]
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "scheduler_id": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "booked",
+              "dropped_off",
+              "pending"
+            ]
+          },
+          "customer_info": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "phone": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "address": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "issue_type": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "examples": [
+              "HVAC Repair"
+            ]
+          },
+          "job_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "selected_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "selected_time": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "utm": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "medium": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "campaign": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "term": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "content": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "google_ads": {
+            "type": "object",
+            "properties": {
+              "gclid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "wbraid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "gbraid": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "st_job_id": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "ServiceTitan job ID when the booking created a job"
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "last_activity_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "event_type": {
+                  "type": "string",
+                  "examples": [
+                    "avoca:bookingCompletion"
+                  ]
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CampaignText": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Constant `outbound_message` — this feed is outbound-only"
+          },
+          "customer_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Conversation's resolved CRM customer ID"
+          },
+          "campaign_name": {
+            "type": "string"
+          },
+          "customer_response": {
+            "type": "string",
+            "description": "Body of the customer's first inbound reply, else `no response`"
+          },
+          "created_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "phone_number": {
+            "type": "string"
+          }
+        }
+      },
+      "OutboundEvent": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "outbound_message",
+              "customer_subscribed",
+              "customer_unsubscribed"
+            ]
+          },
+          "customer_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "customer_phone_number": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.avoca.ai/changelog
+scheme: dated-per-product
+current_spec_version: 1.3.0
+products:
+- Platform
+- Voice
+- SMS
+- Email
+- Outbound Campaigns
+- Speed-to-Lead
+- Coach
+- Analytics Coach
+- Simple Scheduler
+- Responder
+- Workflows
+entries:
+- date: '2026-04-03'
+  product: Platform
+  highlight: Unified Messages Page — SMS, web chat, and workflow messages in a single inbox with workflow filters and call-to-conversation links.
+  breaking: false
+- date: '2026-04-03'
+  product: Platform
+  highlight: Team Alerts — team-scoped configurable alerts with detailed email notifications for call triage.
+  breaking: false
+- date: '2026-04-03'
+  product: Platform
+  highlight: Revenue Attribution KPI — dashboard metric for revenue attributed to AI-handled calls.
+  breaking: false
+- date: '2026-04-03'
+  product: Platform
+  highlight: Enterprise Calls Dashboard — Sankey diagrams, advanced filtering, and inline call details.
+  breaking: false
+- date: '2026-04-03'
+  product: Responder
+  highlight: Custom Call Reasons (full CRUD), smarter context-aware transfer routing, outbound voicemail handling, and booking-failure notifications.
+  breaking: false
+- date: '2026-04-03'
+  product: Outbound Campaigns
+  highlight: Workflow Campaign Builder (v3) — redesigned campaign creation with direct agent selection and advanced audience filters.
+  breaking: false
+notes: >-
+  Recent window captured from the dated changelog; the live per-product
+  changelog at https://docs.avoca.ai/changelog is the source of truth.

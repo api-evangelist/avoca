@@ -1,0 +1,56 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.avoca.ai/api-reference/introduction
+authentication:
+  style: bearer-api-key
+  header: 'Authorization: Bearer avoca_<64 hex characters>'
+  ref: authentication/avoca-authentication.yml
+team_scoping:
+  description: >-
+    Multi-team keys resolve the target team via the `x-team-id` header (v0) or
+    the `{teamId}` URL path segment (v1). Single-team keys need no scoping
+    header.
+  header: x-team-id
+pagination:
+  styles:
+  - style: keyset-cursor
+    description: >-
+      Canonical leads feed and similar feeds paginate ascending by
+      `(created_at, id)`; pass `cursor` and read `next_cursor` / `has_more`.
+    params: [cursor]
+    response_fields: [next_cursor, has_more]
+  - style: offset
+    description: >-
+      Simple Scheduler booking requests (and some list endpoints) support
+      `offset` + `limit`, returning `meta.total`.
+    params: [offset, limit]
+    response_fields: [meta.total]
+filtering:
+  test_data:
+    description: >-
+      Test/QA data is excluded by default; opt in with `include_test_numbers=true`
+      (leads) or `include_test_teams=true` (teams).
+  column_allowlist: >-
+    List Calls returns only the columns in the team's configured column
+    allowlist; pre-call transfers return a fixed shape and ignore the allowlist.
+idempotency:
+  supported: false
+  note: >-
+    The Enterprise API is read-only (all operations are GET), so request
+    idempotency keys do not apply. Webhook deliveries carry an
+    `X-Avoca-Event-Id` UUID for idempotent event processing on the consumer
+    side.
+versioning:
+  scheme: uri-path
+  versions: [v0, v1]
+  current_spec_version: 1.3.0
+  note: >-
+    Endpoints are grouped under `/api/...` (v0) and `/api/v1/...`; v1 is the
+    team-scoped, cursor-paginated generation.
+  ref: lifecycle/avoca-lifecycle.yml
+errors:
+  envelope: '{ error, message? }'
+  ref: errors/avoca-problem-types.yml
+webhooks:
+  ref: asyncapi/avoca-webhooks.yml
+  signing: HMAC-SHA256 via X-Webhook-Signature

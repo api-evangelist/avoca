@@ -1,0 +1,16 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/avoca-openapi-original.json
+skills:
+- file: avoca-pull-calls-and-transcripts.md
+  name: Pull Avoca calls and transcripts
+  api: openapi/avoca-openapi-original.json
+  operations: [listCalls, getCall, getCallTranscript, getLatestCallByPhone]
+- file: avoca-sync-leads-feed.md
+  name: Sync the Avoca leads feed
+  api: openapi/avoca-openapi-original.json
+  operations: [listTeams, listTeamLeads, listEnterpriseLeads]
+- file: avoca-coach-qa-export.md
+  name: Export Avoca Coach QA evaluations
+  api: openapi/avoca-openapi-original.json
+  operations: [listCoachRubrics, listCoachCalls, getCoachCall]

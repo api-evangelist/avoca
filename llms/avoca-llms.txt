@@ -1,0 +1,150 @@
+# Avoca
+
+## Docs
+
+- [Get funnel analytics](https://docs.avoca.ai/api-reference/analytics-v1/get-funnel-analytics.md): Funnel metrics with drop-off data. Requires the `read:scheduler_analytics` permission.
+- [Get funnel analytics (cross-team)](https://docs.avoca.ai/api-reference/analytics-v1/get-funnel-analytics-cross-team.md): Aggregated funnel data across all teams accessible to a multi-team key, with an optional `team_id` filter. Requires the `read:scheduler_analytics` permission.
+- [Get issue-type distribution](https://docs.avoca.ai/api-reference/analytics-v1/get-issue-type-distribution.md): Distribution of issue types selected in the scheduler. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.
+- [Get service-area distribution](https://docs.avoca.ai/api-reference/analytics-v1/get-service-area-distribution.md): Distribution of service-area lookups. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.
+- [Get UTM attribution](https://docs.avoca.ai/api-reference/analytics-v1/get-utm-attribution.md): UTM attribution data. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission.
+- [Authentication & Permissions](https://docs.avoca.ai/api-reference/authentication.md): API key types, team scoping, and permission scopes
+- [Get a call](https://docs.avoca.ai/api-reference/calls/get-a-call.md): Get a specific call by ID. Requires the `read:calls` permission.
+- [Get a call transcript](https://docs.avoca.ai/api-reference/calls/get-a-call-transcript.md): Get the transcript for a specific call. Requires the `read:transcripts` permission.
+- [Get latest call by phone number](https://docs.avoca.ai/api-reference/calls/get-latest-call-by-phone-number.md): Get the most recent call for a phone number. Requires the `read:calls` permission.
+- [List calls](https://docs.avoca.ai/api-reference/calls/list-calls.md): List calls for the authenticated team. The exact columns returned are governed by the team's configured column allowlist. Requires the `read:calls` permission.
+- [List pre-call transfers](https://docs.avoca.ai/api-reference/calls/list-pre-call-transfers.md): List inbound calls that were forwarded to a configured destination *before* the AI agent picked up, based on the team's pre-call transfer rules. These calls have `duration_seconds: 0` because the AI never engaged. Returns a fixed shape and does not honor the team's column allowlist. Requires the `re…
+- [Get a coach call evaluation](https://docs.avoca.ai/api-reference/coach/get-a-coach-call-evaluation.md): Get a single evaluated coach call by its numeric ID. Requires the `read:coach` permission.
+- [List coach call evaluations](https://docs.avoca.ai/api-reference/coach/list-coach-call-evaluations.md): List evaluated coach (QA) calls for the team, newest first. Each row includes the score, awarded/max points, per-item evaluation answers, and the `rubric_id` for joining to `GET /api/coach/rubrics`. Requires the `read:coach` permission.
+- [List coach rubrics](https://docs.avoca.ai/api-reference/coach/list-coach-rubrics.md): Reference endpoint: lists the team's enabled rubrics. Items provide the key → name mapping for the `evaluation_answers` keys returned on coach calls. Requires the `read:coach` permission.
+- [API Overview](https://docs.avoca.ai/api-reference/introduction.md): Introduction to the Avoca Enterprise API
+- [List leads (all brands)](https://docs.avoca.ai/api-reference/leads/list-leads-all-brands.md): The canonical leads feed across every team (brand) in the enterprise. Requires an `enterprise_all_teams` key whose enterprise matches the path — single-team and portfolio keys receive 403. Every row carries `team_id`. Same query parameters as the single-team feed. Requires the `read:leads` permissio…
+- [List leads (single team)](https://docs.avoca.ai/api-reference/leads/list-leads-single-team.md): The canonical leads feed for one team: the historical/pull counterpart to the `lead.*` event webhooks, including the raw third-party payload. Keyset cursor-paginated ascending by `(created_at, id)`. Leads from registered test phone numbers are excluded by default (`include_test_numbers=true` opts in…
+- [List unified leads (v0)](https://docs.avoca.ai/api-reference/leads/list-unified-leads-v0.md): Channel-touchpoint aggregation of leads across calls, the scheduling widget, web chat, text, and Google LSA. This is **not** the canonical leads record and does not include the raw third-party payload — for that, use the v1 leads feed (`GET /api/v1/teams/{teamId}/leads`). Requires the `read:leads` p…
+- [List campaign texts](https://docs.avoca.ai/api-reference/outbound-texting/list-campaign-texts.md): One row per initial outbound campaign text message, including the customer's first reply. Designed for partners ingesting Avoca outbound activity into a BI warehouse. Always scoped to the team in the URL path. Requires the `read:outbound` permission.
+- [List outbound customer events](https://docs.avoca.ai/api-reference/outbound-texting/list-outbound-customer-events.md): Customer events over time (multiple rows per customer): outbound messages and subscription (opt-in/opt-out) changes. Subscription events reflect each phone's *current* state, timestamped by its last change — at most one subscription event per phone. Requires the `read:outbound` permission.
+- [Get scheduler analytics](https://docs.avoca.ai/api-reference/scheduler-analytics-v0/get-scheduler-analytics.md): Detailed Simple Scheduler analytics. Select which metric blocks to include with the `metrics` parameter: `funnel`, `bookings`, `chart`, `utm`, `google_ads`, `service_areas`, `issue_types`, `customer_events`. Requires the `read:scheduler_analytics` permission.
+- [Get scheduler analytics summary](https://docs.avoca.ai/api-reference/scheduler-analytics-v0/get-scheduler-analytics-summary.md): Summary Simple Scheduler stats for today, this week, and this month. Requires the `read:scheduler_analytics` permission.
+- [List Simple Scheduler booking requests](https://docs.avoca.ai/api-reference/scheduler-analytics-v0/list-simple-scheduler-booking-requests.md): Booking requests submitted through Simple Scheduler. Supports offset pagination (`offset` + `limit`, returns `meta.total`) or cursor pagination (`cursor` = `created_at` from a previous page; response includes `next_cursor` and `has_more`). Requires the `read:scheduler_analytics` permission.
+- [List Simple Scheduler configs](https://docs.avoca.ai/api-reference/scheduler-analytics-v0/list-simple-scheduler-configs.md): Scheduler configurations for the team. Team is resolved from `x-team-id` or the optional `team_id` query parameter (multi-team keys must have access to that team). Requires the `read:scheduler_analytics` permission.
+- [Get a booking](https://docs.avoca.ai/api-reference/sessions-&-bookings/get-a-booking.md): Get a single booking by session ID. Returns 404 if the session exists but is not booked. Requires the `read:scheduler_analytics` permission.
+- [Get a session](https://docs.avoca.ai/api-reference/sessions-&-bookings/get-a-session.md): Get a single session by ID. Requires the `read:scheduler_analytics` permission.
+- [List bookings](https://docs.avoca.ai/api-reference/sessions-&-bookings/list-bookings.md): List bookings for a team — sessions with status `booked`. Same query parameters as sessions, minus `status`. Requires the `read:scheduler_analytics` permission.
+- [List bookings (cross-team)](https://docs.avoca.ai/api-reference/sessions-&-bookings/list-bookings-cross-team.md): Bookings across all teams accessible to a multi-team key. Requires the `read:scheduler_analytics` permission.
+- [List schedulers](https://docs.avoca.ai/api-reference/sessions-&-bookings/list-schedulers.md): List scheduler configs for a team. Requires the `read:scheduler_analytics` permission.
+- [List sessions](https://docs.avoca.ai/api-reference/sessions-&-bookings/list-sessions.md): List scheduling-widget sessions for a team — a customer's journey from starting a booking to completing it or dropping off. Requires the `read:scheduler_analytics` permission.
+- [List sessions (cross-team)](https://docs.avoca.ai/api-reference/sessions-&-bookings/list-sessions-cross-team.md): Sessions across all teams accessible to a multi-team key. Supports the same query parameters as the team-scoped endpoint, plus an optional `team_id` filter. Requires the `read:scheduler_analytics` permission.
+- [List teams](https://docs.avoca.ai/api-reference/teams/list-teams.md): List all teams accessible with this API key. Requires the `read:teams` permission. Internal QA/test teams are excluded by default; pass `include_test_teams=true` to include them.
+- [List teams (v0)](https://docs.avoca.ai/api-reference/teams/list-teams-v0.md): List the teams the API key can access. For multi-team keys, all accessible teams; for single-team keys, the one team. Requires the `read:teams` permission.
+- [Event Payloads](https://docs.avoca.ai/api-reference/webhooks/event-payloads.md): Payload schemas for each webhook event type
+- [Event Webhooks](https://docs.avoca.ai/api-reference/webhooks/event-webhooks.md): Receive real-time notifications when calls complete, leads are created, bookings happen, and customers change subscription preferences
+- [Speed-to-Lead Intake Webhook](https://docs.avoca.ai/api-reference/webhooks/lead-intake.md): Push leads into Avoca from any source for instant AI outreach
+- [Capabilities Matrix](https://docs.avoca.ai/capabilities-matrix.md): Complete AI capabilities matrix to maximize lead potential across the funnel
+- [Changelog](https://docs.avoca.ai/changelog.md): Recent updates and release history for Avoca AI
+- [Analytics Coach](https://docs.avoca.ai/changelog/analytics-coach.md): Recent updates and releases for Analytics Coach
+- [Coach](https://docs.avoca.ai/changelog/coach.md): Recent updates and releases for Coach
+- [Email](https://docs.avoca.ai/changelog/email.md): Recent updates and releases for Email
+- [Outbound Campaigns](https://docs.avoca.ai/changelog/outbound-campaigns.md): Recent updates and releases for Outbound Campaigns
+- [Platform](https://docs.avoca.ai/changelog/platform.md): Recent updates and releases for Platform
+- [Responder](https://docs.avoca.ai/changelog/responder.md): Recent updates and releases for Responder
+- [Simple Scheduler](https://docs.avoca.ai/changelog/simple-scheduler.md): Recent updates and releases for Simple Scheduler
+- [SMS](https://docs.avoca.ai/changelog/sms.md): Recent updates and releases for SMS
+- [Speed-to-Lead](https://docs.avoca.ai/changelog/speed-to-lead.md): Recent updates and releases for Speed-to-Lead
+- [Voice](https://docs.avoca.ai/changelog/voice.md): Recent updates and releases for Voice
+- [Workflows](https://docs.avoca.ai/changelog/workflows.md): Recent updates and releases for Workflows
+- [3CX](https://docs.avoca.ai/config/call-forwarding/3cx.md): Set up your Avoca number in 3CX for after-hours and overflow coverage
+- [Dialpad](https://docs.avoca.ai/config/call-forwarding/dialpad.md): Set up your Avoca number in Dialpad (ServiceTitan Phones Pro)
+- [Five9](https://docs.avoca.ai/config/call-forwarding/five9.md): Forward calls from Five9 to Avoca for after-hours and overflow coverage
+- [Call Forwarding Overview](https://docs.avoca.ai/config/call-forwarding/overview.md): How to route calls from your phone system to Avoca — primary, after-hours, and overflow coverage
+- [CRM Support](https://docs.avoca.ai/config/crm-support.md): Supported CRM and field service management integrations for Avoca
+- [Integrations](https://docs.avoca.ai/config/integrations.md): Connect Avoca with your existing business systems
+- [Scheduling](https://docs.avoca.ai/config/scheduling.md): Intelligent appointment scheduling and dispatch optimization
+- [Web Chat](https://docs.avoca.ai/config/web-chat.md): Configure the Avoca web chat widget, including a dedicated sandbox setting
+- [API Integration Guide](https://docs.avoca.ai/custom-integration/api-integration-guide.md): End-to-end contract expectations for your custom integration with Avoca
+- [API & Integration Methods](https://docs.avoca.ai/custom-integration/api-methods.md): Endpoint design, authentication, and REST standards for the custom integration
+- [Customization & AI Behavior](https://docs.avoca.ai/custom-integration/customization-behavior.md): Business rules, conversational handling, and personalization controls
+- [Data Exchange & Booking Process](https://docs.avoca.ai/custom-integration/data-exchange.md): Schemas, response patterns, and omnichannel booking flows
+- [Overview](https://docs.avoca.ai/custom-integration/overview.md): Shared custom integration implementation playbook
+- [Payload Handshake Template](https://docs.avoca.ai/custom-integration/payload-handshake.md): Canonical Avoca payload contract for custom integration form-based submissions
+- [Identity and Access Controls](https://docs.avoca.ai/custom-integration/security-access-controls.md): Identity, access management, and insider risk safeguards enforced across Avoca.
+- [Data Protection and Privacy](https://docs.avoca.ai/custom-integration/security-data-protection.md): Encryption, data handling obligations, and privacy controls available to Avoca customers.
+- [Secure Development Lifecycle](https://docs.avoca.ai/custom-integration/security-development.md): How Avoca embeds security into engineering, testing, and release management.
+- [Governance, Policy, and Compliance](https://docs.avoca.ai/custom-integration/security-governance.md): How Avoca manages security policy development, incident response, and regulatory commitments.
+- [Monitoring, Logging, and Resilience](https://docs.avoca.ai/custom-integration/security-monitoring.md): Operational telemetry, backup planning, and reliability benchmarks for the Avoca platform.
+- [Platform Security Standards](https://docs.avoca.ai/custom-integration/security-platform-standards.md): Technical requirements for connectivity, encryption, and platform hardening.
+- [Security Posture & Compliance](https://docs.avoca.ai/custom-integration/security-posture.md): Map of Avoca's security documentation for custom integration stakeholders.
+- [Security Program Overview](https://docs.avoca.ai/custom-integration/security-program-overview.md): High-level summary of Avoca's security leadership, partners, and certification roadmap.
+- [Security, Compliance, and Reliability](https://docs.avoca.ai/custom-integration/security-reliability.md): Quick links to data protection, reliability, and observability guidance.
+- [Risk and Vulnerability Management](https://docs.avoca.ai/custom-integration/security-risk-management.md): Controls that identify, assess, and minimize security risks across the Avoca platform.
+- [Architecture & Data Strategy](https://docs.avoca.ai/custom-integration/technical-architecture.md): How Avoca calls your APIs in real time, and what that means for latency and resiliency
+- [Additional Technical Considerations](https://docs.avoca.ai/custom-integration/technical-considerations.md): Special scenarios, analytics hooks, and roadmap items
+- [Technical Integration](https://docs.avoca.ai/custom-integration/technical-integration.md): API integration specifications for the custom integration program
+- [Testing, Deployment, and Support](https://docs.avoca.ai/custom-integration/testing-support.md): Certification, change management, and support processes
+- [Demo Library](https://docs.avoca.ai/demos.md): Explore real-world examples of Avoca AI in action
+- [Basic Booking](https://docs.avoca.ai/demos/basic-booking.md): Learn how to create a basic booking flow with Avoca
+- [New Customer Booking for Rental Property](https://docs.avoca.ai/demos/humans/book-and-take-message.md): Watch how the agent handles a first-time customer booking for an Airbnb rental property
+- [Human Agent Booking Flow](https://docs.avoca.ai/demos/humans/human-agent-booking-flow.md): Watch how a human agent pulls up customer profile, verifies membership, and completes a booking
+- [AI to Human Warm Transfer](https://docs.avoca.ai/demos/humans/priority-dispatch-escalation.md): Watch how a human agent receives a warm transfer from the AI with full context and handles a complex AC repair escalation
+- [Basic Booking - Home Depot Transfer](https://docs.avoca.ai/demos/inbound/basic-booking-1.md): Watch how the agent handles a warm transfer from Home Depot and books an appointment
+- [Basic Booking - Maintenance Plan](https://docs.avoca.ai/demos/inbound/basic-booking-2.md): Customer confirms contract transfer and schedules HVAC maintenance
+- [Cancellation - AC Fixed](https://docs.avoca.ai/demos/inbound/cancellation-1.md): Customer cancels because AC is working after fan adjustment
+- [Cancellation Reversal](https://docs.avoca.ai/demos/inbound/cancellation-2.md): Customer wants to reschedule previously canceled appointment
+- [Basic Booking - Electric Company](https://docs.avoca.ai/demos/inbound/complimenting-ai.md): AI agent handles an inbound booking call for an electric company
+- [Emergency Call - Sewer Backup](https://docs.avoca.ai/demos/inbound/emergency-call-1.md): Agent handles urgent sewer line backup causing basement flooding
+- [Emergency Call - Recurring AC Issue](https://docs.avoca.ai/demos/inbound/emergency-call-2.md): Customer reports AC still not working after two service visits
+- [Existing Appointment Confirmation](https://docs.avoca.ai/demos/inbound/existing-appointment.md): Customer confirms appointment and asks about company details
+- [Complaint Handling](https://docs.avoca.ai/demos/inbound/objection-complaint.md): Frustrated customer with unresolved heat pump issues and no callback
+- [Price Objection - High Quote](https://docs.avoca.ai/demos/inbound/objection-price-1.md): Customer challenges $900 quote when expecting $400-$500
+- [Price Objection - Dryer Vent Cleaning](https://docs.avoca.ai/demos/inbound/objection-price-2.md): Customer cancels booking due to price increase from $140 to $299
+- [Process Objection](https://docs.avoca.ai/demos/inbound/objection-process.md): Customer objects to information collection before pricing
+- [Scheduling Objection](https://docs.avoca.ai/demos/inbound/objection-scheduling.md): Customer needs service before 9 AM due to personal appointment
+- [Price Inquiry](https://docs.avoca.ai/demos/inbound/price-inquiry.md): Customer asks about service costs before scheduling
+- [Rescheduling - High Quote Concern](https://docs.avoca.ai/demos/inbound/rescheduling.md): Son calls about $9000 charge for elderly mother, needs manager discussion
+- [Warm Transfer](https://docs.avoca.ai/demos/inbound/warm-transfer.md): Watch how the AI agent briefs an operator with a call summary before connecting the caller
+- [Advanced Empathy - Frustrated Customer](https://docs.avoca.ai/demos/other-examples/empathy-2.md): Agent handles angry customer with exceptional emotional intelligence
+- [AI Call with Empathy - Friend Pays for Neighbor's Water Heater](https://docs.avoca.ai/demos/other-examples/empathy-friend-neighbor.md): Heartwarming call where a friend schedules and pays for her elderly neighbor's water heater replacement
+- [Spanish Language Support](https://docs.avoca.ai/demos/other-examples/spanish-language.md): AI agent handles insurance documentation request in Spanish
+- [Alternative Voice - Chris](https://docs.avoca.ai/demos/other-examples/voice-chris.md): Male voice option for HVAC tune-up booking
+- [Alternative Voice - Maddie](https://docs.avoca.ai/demos/other-examples/voice-maddie.md): Routine HVAC tune-up with Maddie voice
+- [Alternative Voice - Sarah D2](https://docs.avoca.ai/demos/other-examples/voice-sarah-d2.md): Emergency AC repair with different voice personality
+- [Maintenance Call - Service Tune-up](https://docs.avoca.ai/demos/outbound/maintenance-1.md): Proactive outreach for maintenance check results in booking
+- [Maintenance Call with Empathy](https://docs.avoca.ai/demos/outbound/maintenance-2-empathy.md): Agent shows compassion when customer mentions pet loss
+- [Outbound Rescheduling - High Volume](https://docs.avoca.ai/demos/outbound/rescheduling-1.md): Agent proactively calls to reschedule due to high service volume
+- [Outbound Rescheduling - Volume 2](https://docs.avoca.ai/demos/outbound/rescheduling-2.md): Another example of proactive rescheduling due to high volume
+- [Speed to Lead](https://docs.avoca.ai/demos/outbound/speed-to-lead.md): Outbound call for urgent HVAC service with waived dispatch fee
+- [What is Avoca’s 10DLC registration and opt-out compliance process?](https://docs.avoca.ai/faq/10dlc-compliance.md): Understand how Avoca onboards brands for A2P/10DLC and enforces STOP/UNSUBSCRIBE rules.
+- [Frequently Asked Questions](https://docs.avoca.ai/faq/index.md): Browse common Avoca FAQ topics, including ServiceTitan automation workflows.
+- [Do Avoca campaigns support MMS, emojis, and dynamic personalization?](https://docs.avoca.ai/faq/messaging-capabilities.md): Use rich media, extended characters, and tokenized templates for personalized outreach.
+- [How does Avoca handle message throttling and carrier filtering?](https://docs.avoca.ai/faq/messaging-throttling.md): Learn about batching, rate limits, and sender reputation tools that protect deliverability.
+- [How do I build a multi-step campaign?](https://docs.avoca.ai/faq/multi-step-campaign.md): Create sequenced workflows that move a lead from first contact through reminders, estimate follow-up, and review requests.
+- [What reporting, attribution, and dashboards are available?](https://docs.avoca.ai/faq/reporting-analytics.md): See how Avoca surfaces campaign metrics, links jobs to ServiceTitan revenue, and supports CSR workflows.
+- [How does Avoca pull and push ServiceTitan customer/job data?](https://docs.avoca.ai/faq/service-titan-data-sync.md): Understand the incremental reads and targeted writes that keep Avoca and ServiceTitan in sync.
+- [How can SMS messages be triggered automatically from ServiceTitan events?](https://docs.avoca.ai/faq/service-titan-sms.md): Leverage Avoca's audience-based campaigns to send SMS workflows when ServiceTitan events occur.
+- [Does Avoca support two-way sync with ServiceTitan?](https://docs.avoca.ai/faq/service-titan-sync.md): Understand how Avoca writes notes, tags, and conversation data back to ServiceTitan job and customer records.
+- [Can workflows branch based on customer responses?](https://docs.avoca.ai/faq/workflow-branching.md): Use Avoca's outbound workflow edges to route customers based on affirmative, negative, or unread replies.
+- [Can workflows be shared across trades or customized by department?](https://docs.avoca.ai/faq/workflow-cross-trade.md): Reuse the same workflow across HVAC, plumbing, electrical, and tailor configs per business unit.
+- [Welcome to Avoca](https://docs.avoca.ai/index.md): Welcome to Avoca Documentation
+- [Analytics & Coach](https://docs.avoca.ai/products/analytics-coach.md): AI-powered performance insights and team coaching
+- [Capacity Management](https://docs.avoca.ai/products/capacity-management.md): Daily execution checklist for filling open board capacity with proactive campaigns
+- [Dispatch](https://docs.avoca.ai/products/dispatch.md): Live dispatch board, assignment automation, and ETA controls powered by ServiceTitan data
+- [Google LSA](https://docs.avoca.ai/products/google-lsa.md): Integrate Google Local Services Ads with Avoca Speed to Lead operations
+- [Inbound](https://docs.avoca.ai/products/inbound.md): AI-powered inbound communication management
+- [Outbound](https://docs.avoca.ai/products/outbound.md): Proactive customer engagement at scale
+- [Simple Scheduler](https://docs.avoca.ai/products/simple-scheduler.md): Modern booking flows with automated follow-up and attribution intelligence
+- [Speed to Lead](https://docs.avoca.ai/products/speed-to-lead.md): Convert leads instantly with automated outreach the moment they arrive
+- [Roadmap](https://docs.avoca.ai/roadmap.md): Upcoming features and recent updates for Avoca AI
+- [Analytics Coach](https://docs.avoca.ai/roadmap/analytics-coach.md): Upcoming features and improvements for Analytics Coach
+- [Coach](https://docs.avoca.ai/roadmap/coach.md): Upcoming features and improvements for Coach
+- [Email](https://docs.avoca.ai/roadmap/email.md): Upcoming features and improvements for Email
+- [Outbound Campaigns](https://docs.avoca.ai/roadmap/outbound-campaigns.md): Upcoming features and improvements for Outbound Campaigns
+- [Platform](https://docs.avoca.ai/roadmap/platform.md): Upcoming features and improvements for Platform
+- [Responder](https://docs.avoca.ai/roadmap/responder.md): Upcoming features and improvements for Responder
+- [Simple Scheduler](https://docs.avoca.ai/roadmap/simple-scheduler.md): Upcoming features and improvements for Simple Scheduler
+- [SMS](https://docs.avoca.ai/roadmap/sms.md): Upcoming features and improvements for SMS
+- [Speed-to-Lead](https://docs.avoca.ai/roadmap/speed-to-lead.md): Upcoming features and improvements for Speed-to-Lead
+- [Voice](https://docs.avoca.ai/roadmap/voice.md): Upcoming features and improvements for Voice
+- [Workflows](https://docs.avoca.ai/roadmap/workflows.md): Upcoming features and enhancements for Workflows
+- [ServiceTitan Integration](https://docs.avoca.ai/service-titan.md): Documentation of Avoca's ServiceTitan API workflows and required scopes.
+
+## OpenAPI Specs
+
+- [openapi](https://docs.avoca.ai/api-reference/openapi.json)

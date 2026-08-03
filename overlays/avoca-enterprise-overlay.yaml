@@ -1,0 +1,24 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Avoca Enterprise API
+  version: 1.0.0
+extends: openapi/avoca-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-18'
+    x-apievangelist-provider: avoca
+    x-apievangelist-auth: authentication/avoca-authentication.yml
+    x-apievangelist-webhooks: asyncapi/avoca-webhooks.yml
+    x-apievangelist-conventions: conventions/avoca-conventions.yml
+    x-apievangelist-errors: errors/avoca-problem-types.yml
+- target: $.info
+  update:
+    x-agentic-readiness: read-only
+    x-agentic-access: agentic-access/avoca-agentic-access.yml
+    description: >-
+      Avoca Enterprise API — read access to calls, transcripts, leads, teams,
+      coach/QA evaluations, scheduler sessions and bookings, analytics, and
+      outbound texting for AI front-office activity in home-services businesses.
+      Bearer API-key auth (avoca_<64 hex>) with per-key permission scopes and
+      team scoping; HMAC-signed event webhooks complement the read API.
