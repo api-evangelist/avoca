@@ -215,6 +215,10 @@ apis:
   - type: DataModel
     url: data-model/avoca-data-model.yml
 common:
+- type: MCPServer
+  url: mcp/avoca-mcp.yml
+- type: Overlay
+  url: overlays/avoca-enterprise-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/avoca-agentic-access.yml
 - type: DeveloperPortal
