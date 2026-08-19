@@ -1,0 +1,191 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Calls API",
+    "version": "1.3.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Calls",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List calls",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/calls",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 100, max 1000)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset (default 0)"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              }
+            ]
+          },
+          "docs": "List calls for the authenticated team. The exact columns returned are governed by the team's configured column allowlist. Requires the `read:calls` permission."
+        },
+        {
+          "info": {
+            "name": "Get a call",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/calls/:id",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The call ID (UUID)"
+              }
+            ]
+          },
+          "docs": "Get a specific call by ID. Requires the `read:calls` permission."
+        },
+        {
+          "info": {
+            "name": "Get a call transcript",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/calls/:id/transcript",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The call ID (UUID)"
+              }
+            ]
+          },
+          "docs": "Get the transcript for a specific call. Requires the `read:transcripts` permission."
+        },
+        {
+          "info": {
+            "name": "Get latest call by phone number",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/calls/latest-by-phone",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "phone",
+                "value": "",
+                "type": "query",
+                "description": "Phone number to search"
+              }
+            ]
+          },
+          "docs": "Get the most recent call for a phone number. Requires the `read:calls` permission."
+        },
+        {
+          "info": {
+            "name": "List pre-call transfers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/calls/pre-call-transfers",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 100, max 1000)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset (default 0)"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "rule_types",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated rule types to filter by. One or more of: `REJECTED_AGENT_PREVIOUSLY`, `RECENT_CALLER`, `UPCOMING_APPOINTMENTS`, `RECENT_APPOINTMENTS`, `CUSTOMER_TYPE_RESIDENTIAL`, `CUSTOMER_TYPE_COMMERCIAL`, `CALLER_PHONE_MATCH`, `CALL_REASON_MATCH`, `CUSTOMER_TAG_MATCH`."
+              }
+            ]
+          },
+          "docs": "List inbound calls that were forwarded to a configured destination *before* the AI agent picked up, based on the team's pre-call transfer rules. These calls have `duration_seconds: 0` because the AI never engaged. Returns a fixed shape and does not honor the team's column allowlist. Requires the `read:calls` permission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

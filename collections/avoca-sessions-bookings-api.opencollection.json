@@ -1,0 +1,301 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Sessions & Bookings API",
+    "version": "1.3.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sessions & Bookings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List schedulers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/schedulers",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              }
+            ]
+          },
+          "docs": "List scheduler configs for a team. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "List sessions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/sessions",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by session status"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows on/after this ISO 8601 timestamp"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows before this ISO 8601 timestamp"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "List scheduling-widget sessions for a team — a customer's journey from starting a booking to completing it or dropping off. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "Get a session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/sessions/:sessionId",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "sessionId",
+                "value": "",
+                "type": "path",
+                "description": "The session ID"
+              }
+            ]
+          },
+          "docs": "Get a single session by ID. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "List bookings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/bookings",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows on/after this ISO 8601 timestamp"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows before this ISO 8601 timestamp"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "List bookings for a team — sessions with status `booked`. Same query parameters as sessions, minus `status`. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "Get a booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/bookings/:bookingId",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "bookingId",
+                "value": "",
+                "type": "path",
+                "description": "The session ID of the booking"
+              }
+            ]
+          },
+          "docs": "Get a single booking by session ID. Returns 404 if the session exists but is not booked. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "List sessions (cross-team)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/sessions",
+            "params": [
+              {
+                "name": "team_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to one team"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by session status"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows on/after this ISO 8601 timestamp"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows before this ISO 8601 timestamp"
+              },
+              {
+                "name": "include_test_teams",
+                "value": "",
+                "type": "query",
+                "description": "Include designated internal QA/test teams in multi-team aggregations (default false)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "Sessions across all teams accessible to a multi-team key. Supports the same query parameters as the team-scoped endpoint, plus an optional `team_id` filter. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "List bookings (cross-team)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/bookings",
+            "params": [
+              {
+                "name": "team_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to one team"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows on/after this ISO 8601 timestamp"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows before this ISO 8601 timestamp"
+              },
+              {
+                "name": "include_test_teams",
+                "value": "",
+                "type": "query",
+                "description": "Include designated internal QA/test teams in multi-team aggregations (default false)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "Bookings across all teams accessible to a multi-team key. Requires the `read:scheduler_analytics` permission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

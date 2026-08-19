@@ -1,0 +1,239 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Analytics (v1) API",
+    "version": "1.3.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Analytics (v1)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get funnel analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/analytics/funnel",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "IANA timezone for date calculations (default America/New_York)"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              }
+            ]
+          },
+          "docs": "Funnel metrics with drop-off data. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "Get UTM attribution",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/analytics/utm",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "IANA timezone for date calculations (default America/New_York)"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              }
+            ]
+          },
+          "docs": "UTM attribution data. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "Get service-area distribution",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/analytics/service-areas",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "IANA timezone for date calculations (default America/New_York)"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              }
+            ]
+          },
+          "docs": "Distribution of service-area lookups. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "Get issue-type distribution",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/analytics/issue-types",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "IANA timezone for date calculations (default America/New_York)"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              }
+            ]
+          },
+          "docs": "Distribution of issue types selected in the scheduler. Same query parameters as funnel. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "Get funnel analytics (cross-team)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/analytics/funnel",
+            "params": [
+              {
+                "name": "team_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to one team"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "IANA timezone for date calculations (default America/New_York)"
+              },
+              {
+                "name": "include_test_teams",
+                "value": "",
+                "type": "query",
+                "description": "Include designated internal QA/test teams in multi-team aggregations (default false)"
+              }
+            ]
+          },
+          "docs": "Aggregated funnel data across all teams accessible to a multi-team key, with an optional `team_id` filter. Requires the `read:scheduler_analytics` permission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

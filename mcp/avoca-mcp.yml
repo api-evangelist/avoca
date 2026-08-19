@@ -2,10 +2,8 @@ generated: '2026-07-18'
 method: derived
 status: candidate
 source: openapi/avoca-openapi-original.json
-note: >-
-  No official hosted/remote Avoca MCP server was found. This is a candidate tool
-  list derived one-to-one from the Enterprise API's read operations; auth would
-  be the bearer API key (avoca_<64 hex>).
+note: No official hosted/remote Avoca MCP server was found. This is a candidate tool list derived one-to-one
+  from the Enterprise API's read operations; auth would be the bearer API key (avoca_<64 hex>).
 server:
   name: avoca
   transport: http
@@ -65,3 +63,9 @@ tools:
 - name: list_outbound_events
   description: List outbound customer events for a team.
   source_operation: openapi/avoca-openapi-original.json#listOutboundEvents
+deployment:
+  mode: none
+  verified: derived
+  tools: 18
+  checked: '2026-08-12'
+  source: catalog MCP census

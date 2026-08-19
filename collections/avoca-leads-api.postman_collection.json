@@ -1,0 +1,870 @@
+{
+  "item": [
+    {
+      "id": "2e7f13bf-77f8-4832-b5c0-5cfec09586c5",
+      "name": "Leads",
+      "description": {
+        "content": "Unified leads (v0) and the canonical leads feed (v1)",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c4c90ce6-765e-4a6a-811f-ce9988039355",
+          "name": "List unified leads (v0)",
+          "request": {
+            "name": "List unified leads (v0)",
+            "description": {
+              "content": "Channel-touchpoint aggregation of leads across calls, the scheduling widget, web chat, text, and Google LSA. This is **not** the canonical leads record and does not include the raw third-party payload — for that, use the v1 leads feed (`GET /api/v1/teams/{teamId}/leads`). Requires the `read:leads` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "leads"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Start of date range (ISO 8601; default 7 days ago)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "End of date range (ISO 8601; default now)"
+                },
+                {
+                  "disabled": false,
+                  "key": "type",
+                  "value": "<string>",
+                  "description": "Filter by lead type"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Results per page (default 100, max 1000)"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Pagination offset (default 0)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e25a9b1f-901b-45ee-9e53-00851a50f666",
+              "name": "Paginated list of unified leads",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "leads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"ead7cbf9-045d-638c-9916-e536d3b68e14\",\n      \"datetime\": \"1973-10-28T16:21:41.323Z\",\n      \"type\": \"call\",\n      \"customer_phone\": \"string\",\n      \"customer_email\": \"string\",\n      \"lead_content\": {},\n      \"agent\": \"string\",\n      \"referrer_url\": \"string\",\n      \"attribution\": {\n        \"utm_source\": \"string\",\n        \"gclid\": \"string\"\n      }\n    },\n    {\n      \"id\": \"18cfb0a8-5109-4e07-3ce4-fa044ea9c93d\",\n      \"datetime\": \"1986-10-20T03:44:26.956Z\",\n      \"type\": \"scheduling_widget\",\n      \"customer_phone\": \"string\",\n      \"customer_email\": \"string\",\n      \"lead_content\": {},\n      \"agent\": \"string\",\n      \"referrer_url\": \"string\",\n      \"attribution\": {\n        \"utm_source\": \"string\",\n        \"gclid\": \"string\"\n      }\n    }\n  ],\n  \"pagination\": {\n    \"limit\": 8496,\n    \"offset\": 1184,\n    \"has_more\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f8005c83-0b72-4c15-bb46-8b07f72dfc5a",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "leads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "aaa24b5c-9cde-405c-9d47-775ad9dedfb3",
+          "name": "List leads (single team)",
+          "request": {
+            "name": "List leads (single team)",
+            "description": {
+              "content": "The canonical leads feed for one team: the historical/pull counterpart to the `lead.*` event webhooks, including the raw third-party payload. Keyset cursor-paginated ascending by `(created_at, id)`. Leads from registered test phone numbers are excluded by default (`include_test_numbers=true` opts in). Requires the `read:leads` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "teams",
+                ":teamId",
+                "leads"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Inclusive lower bound on `created_at` (>=)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "Exclusive upper bound on `created_at` (<)"
+                },
+                {
+                  "disabled": false,
+                  "key": "medium",
+                  "value": "<string>",
+                  "description": "Lead-source medium"
+                },
+                {
+                  "disabled": false,
+                  "key": "source",
+                  "value": "<string>",
+                  "description": "Lead-source canonical `name` (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Lead processing status"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_raw",
+                  "value": "true",
+                  "description": "When `false`, omit the `raw` third-party payload field (default true)"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_ignored",
+                  "value": "false",
+                  "description": "When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_test_numbers",
+                  "value": "false",
+                  "description": "When `true`, include leads from the team's registered test phone numbers (default false)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Results per page (default 50, max 500)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "teamId",
+                  "description": "(Required) The team ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0d5c2460-a896-45f2-a0bb-24637c43850c",
+              "name": "Paginated leads",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "leads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "medium",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "source",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_raw",
+                      "value": "true"
+                    },
+                    {
+                      "key": "include_ignored",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_test_numbers",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 12345,\n      \"team_id\": 5225,\n      \"created_at\": \"1980-11-14T08:04:46.167Z\",\n      \"received_at\": \"1989-06-30T09:43:33.161Z\",\n      \"status\": \"completed\",\n      \"source\": {\n        \"id\": 9030,\n        \"name\": \"angi\",\n        \"display_name\": \"Angi\",\n        \"medium\": \"webhook\"\n      },\n      \"external_id\": \"string\",\n      \"customer\": {\n        \"name\": \"string\",\n        \"phone_number\": \"string\",\n        \"email\": \"string\",\n        \"address\": \"string\",\n        \"street\": \"string\",\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"zip\": \"string\",\n        \"country\": \"string\",\n        \"notes\": \"string\"\n      },\n      \"attribution\": {\n        \"utm_source\": \"string\",\n        \"utm_medium\": \"string\",\n        \"utm_campaign\": \"string\",\n        \"utm_term\": \"string\",\n        \"utm_content\": \"string\"\n      },\n      \"contacted\": false,\n      \"not_contacted_reason\": \"string\",\n      \"bookings\": [\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"1984-05-08T22:10:35.063Z\",\n          \"job_type\": \"string\"\n        },\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"1998-01-15T09:44:15.633Z\",\n          \"job_type\": \"string\"\n        }\n      ],\n      \"booked_job_id\": \"string\",\n      \"completed_at\": \"1988-05-24T22:53:08.332Z\",\n      \"raw\": {}\n    },\n    {\n      \"id\": 12345,\n      \"team_id\": 5024,\n      \"created_at\": \"1994-06-08T23:28:46.855Z\",\n      \"received_at\": \"2020-09-21T22:34:00.013Z\",\n      \"status\": \"skipped\",\n      \"source\": {\n        \"id\": 4360,\n        \"name\": \"angi\",\n        \"display_name\": \"Angi\",\n        \"medium\": \"webhook\"\n      },\n      \"external_id\": \"string\",\n      \"customer\": {\n        \"name\": \"string\",\n        \"phone_number\": \"string\",\n        \"email\": \"string\",\n        \"address\": \"string\",\n        \"street\": \"string\",\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"zip\": \"string\",\n        \"country\": \"string\",\n        \"notes\": \"string\"\n      },\n      \"attribution\": {\n        \"utm_source\": \"string\",\n        \"utm_medium\": \"string\",\n        \"utm_campaign\": \"string\",\n        \"utm_term\": \"string\",\n        \"utm_content\": \"string\"\n      },\n      \"contacted\": true,\n      \"not_contacted_reason\": \"string\",\n      \"bookings\": [\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"1951-12-22T15:36:19.962Z\",\n          \"job_type\": \"string\"\n        },\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"1992-01-25T18:29:09.545Z\",\n          \"job_type\": \"string\"\n        }\n      ],\n      \"booked_job_id\": \"string\",\n      \"completed_at\": \"1962-11-09T09:47:41.761Z\",\n      \"raw\": {}\n    }\n  ],\n  \"pagination\": {\n    \"cursor\": \"string\",\n    \"has_more\": true,\n    \"limit\": 7913\n  },\n  \"meta\": {\n    \"team_id\": 5240\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5f8d69d4-767c-447d-a6f3-be0bb31ea1e7",
+              "name": "API key lacks the required permission or team access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "leads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "medium",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "source",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_raw",
+                      "value": "true"
+                    },
+                    {
+                      "key": "include_ignored",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_test_numbers",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "eb21c2f1-bd1f-497f-a5ad-38ef2f9b8958",
+          "name": "List leads (all brands)",
+          "request": {
+            "name": "List leads (all brands)",
+            "description": {
+              "content": "The canonical leads feed across every team (brand) in the enterprise. Requires an `enterprise_all_teams` key whose enterprise matches the path — single-team and portfolio keys receive 403. Every row carries `team_id`. Same query parameters as the single-team feed. Requires the `read:leads` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "enterprise",
+                ":enterpriseId",
+                "leads"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Inclusive lower bound on `created_at` (>=)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "Exclusive upper bound on `created_at` (<)"
+                },
+                {
+                  "disabled": false,
+                  "key": "medium",
+                  "value": "<string>",
+                  "description": "Lead-source medium"
+                },
+                {
+                  "disabled": false,
+                  "key": "source",
+                  "value": "<string>",
+                  "description": "Lead-source canonical `name` (exact match)"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Lead processing status"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_raw",
+                  "value": "true",
+                  "description": "When `false`, omit the `raw` third-party payload field (default true)"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_ignored",
+                  "value": "false",
+                  "description": "When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_test_numbers",
+                  "value": "false",
+                  "description": "When `true`, include leads from the team's registered test phone numbers (default false)"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_test_teams",
+                  "value": "false",
+                  "description": "Include designated internal QA/test teams in multi-team aggregations (default false)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Results per page (default 50, max 500)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "enterpriseId",
+                  "description": "(Required) The enterprise ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "cbfac4dd-be41-4d41-957d-ca39692d8798",
+              "name": "Paginated leads across all brands",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "enterprise",
+                    ":enterpriseId",
+                    "leads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "medium",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "source",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_raw",
+                      "value": "true"
+                    },
+                    {
+                      "key": "include_ignored",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_test_numbers",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_test_teams",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "enterpriseId",
+                      "description": "(Required) The enterprise ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 12345,\n      \"team_id\": 1326,\n      \"created_at\": \"1972-10-12T05:05:51.448Z\",\n      \"received_at\": \"2024-11-30T23:19:25.072Z\",\n      \"status\": \"failed\",\n      \"source\": {\n        \"id\": 9452,\n        \"name\": \"angi\",\n        \"display_name\": \"Angi\",\n        \"medium\": \"webhook\"\n      },\n      \"external_id\": \"string\",\n      \"customer\": {\n        \"name\": \"string\",\n        \"phone_number\": \"string\",\n        \"email\": \"string\",\n        \"address\": \"string\",\n        \"street\": \"string\",\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"zip\": \"string\",\n        \"country\": \"string\",\n        \"notes\": \"string\"\n      },\n      \"attribution\": {\n        \"utm_source\": \"string\",\n        \"utm_medium\": \"string\",\n        \"utm_campaign\": \"string\",\n        \"utm_term\": \"string\",\n        \"utm_content\": \"string\"\n      },\n      \"contacted\": true,\n      \"not_contacted_reason\": \"string\",\n      \"bookings\": [\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"2025-12-06T12:11:32.808Z\",\n          \"job_type\": \"string\"\n        },\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"1980-03-20T04:27:33.311Z\",\n          \"job_type\": \"string\"\n        }\n      ],\n      \"booked_job_id\": \"string\",\n      \"completed_at\": \"2022-11-10T21:50:37.812Z\",\n      \"raw\": {}\n    },\n    {\n      \"id\": 12345,\n      \"team_id\": 8238,\n      \"created_at\": \"2019-03-13T06:14:54.417Z\",\n      \"received_at\": \"1971-06-22T06:52:28.866Z\",\n      \"status\": \"completed\",\n      \"source\": {\n        \"id\": 7727,\n        \"name\": \"angi\",\n        \"display_name\": \"Angi\",\n        \"medium\": \"webhook\"\n      },\n      \"external_id\": \"string\",\n      \"customer\": {\n        \"name\": \"string\",\n        \"phone_number\": \"string\",\n        \"email\": \"string\",\n        \"address\": \"string\",\n        \"street\": \"string\",\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"zip\": \"string\",\n        \"country\": \"string\",\n        \"notes\": \"string\"\n      },\n      \"attribution\": {\n        \"utm_source\": \"string\",\n        \"utm_medium\": \"string\",\n        \"utm_campaign\": \"string\",\n        \"utm_term\": \"string\",\n        \"utm_content\": \"string\"\n      },\n      \"contacted\": true,\n      \"not_contacted_reason\": \"string\",\n      \"bookings\": [\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"1948-02-06T03:48:47.224Z\",\n          \"job_type\": \"string\"\n        },\n        {\n          \"st_job_id\": \"string\",\n          \"booked_at\": \"1951-09-04T02:16:23.636Z\",\n          \"job_type\": \"string\"\n        }\n      ],\n      \"booked_job_id\": \"string\",\n      \"completed_at\": \"1969-02-24T18:04:05.791Z\",\n      \"raw\": {}\n    }\n  ],\n  \"pagination\": {\n    \"cursor\": \"string\",\n    \"has_more\": true,\n    \"limit\": 9881\n  },\n  \"meta\": {\n    \"enterprise_id\": 1013,\n    \"team_ids\": [\n      4103,\n      7302\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "37dc2ba9-ab78-4670-9723-c95391ab78a0",
+              "name": "API key lacks the required permission or team access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "enterprise",
+                    ":enterpriseId",
+                    "leads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "medium",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "source",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_raw",
+                      "value": "true"
+                    },
+                    {
+                      "key": "include_ignored",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_test_numbers",
+                      "value": "false"
+                    },
+                    {
+                      "key": "include_test_teams",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "enterpriseId",
+                      "description": "(Required) The enterprise ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://enterprise-api.avoca.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ea9dce5f-681d-4035-b63e-d1b3e4ed510c",
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Leads API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.",
+      "type": "text/plain"
+    }
+  }
+}

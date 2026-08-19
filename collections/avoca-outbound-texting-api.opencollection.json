@@ -1,0 +1,122 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Outbound Texting API",
+    "version": "1.3.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Outbound Texting",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List campaign texts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/outbound/campaign-texts",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "campaign_name",
+                "value": "",
+                "type": "query",
+                "description": "Campaign to return texts for"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows on/after this ISO 8601 timestamp"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows before this ISO 8601 timestamp"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "One row per initial outbound campaign text message, including the customer's first reply. Designed for partners ingesting Avoca outbound activity into a BI warehouse. Always scoped to the team in the URL path. Requires the `read:outbound` permission."
+        },
+        {
+          "info": {
+            "name": "List outbound customer events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/outbound/events",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "action",
+                "value": "",
+                "type": "query",
+                "description": "Filter to one action"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows on/after this ISO 8601 timestamp"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Only rows before this ISO 8601 timestamp"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "Customer events over time (multiple rows per customer): outbound messages and subscription (opt-in/opt-out) changes. Subscription events reflect each phone's *current* state, timestamped by its last change — at most one subscription event per phone. Requires the `read:outbound` permission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

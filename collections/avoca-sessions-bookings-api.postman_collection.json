@@ -1,0 +1,1476 @@
+{
+  "item": [
+    {
+      "id": "c6c3781f-6755-4a75-978c-957241b5e4b8",
+      "name": "Sessions & Bookings",
+      "description": {
+        "content": "v1 scheduling-widget sessions and completed bookings",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a02f90fd-58ba-4e45-949b-ae33a85c9a6c",
+          "name": "List schedulers",
+          "request": {
+            "name": "List schedulers",
+            "description": {
+              "content": "List scheduler configs for a team. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "teams",
+                ":teamId",
+                "schedulers"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "teamId",
+                  "description": "(Required) The team ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ec57088c-7ef9-44f0-bcb2-f9b1db105049",
+              "name": "Scheduler configs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "schedulers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"scheduler_id\": 898,\n      \"name\": \"string\",\n      \"created_at\": \"1979-03-16T02:54:05.907Z\",\n      \"updated_at\": \"2006-10-08T13:58:49.236Z\"\n    },\n    {\n      \"scheduler_id\": 4880,\n      \"name\": \"string\",\n      \"created_at\": \"2011-11-17T07:10:05.326Z\",\n      \"updated_at\": \"1973-09-30T16:10:23.852Z\"\n    }\n  ],\n  \"meta\": {\n    \"team_id\": 2892\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0882aaba-d55a-4ede-ad64-a2012baefb82",
+              "name": "API key lacks the required permission or team access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "schedulers"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6e6b2bac-cbe9-4919-bc44-aba88542580c",
+          "name": "List sessions",
+          "request": {
+            "name": "List sessions",
+            "description": {
+              "content": "List scheduling-widget sessions for a team — a customer's journey from starting a booking to completing it or dropping off. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "teams",
+                ":teamId",
+                "sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by session status"
+                },
+                {
+                  "disabled": false,
+                  "key": "scheduler_id",
+                  "value": "<integer>",
+                  "description": "Filter to a specific scheduler"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows on/after this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows before this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Results per page (default 50, max 500)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "teamId",
+                  "description": "(Required) The team ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f5c25119-b8af-41d7-b3d5-2616bddadf9e",
+              "name": "Paginated sessions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 1913,\n      \"scheduler_id\": 9904,\n      \"status\": \"dropped_off\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"1980-02-20\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 1748,\n      \"started_at\": \"2011-01-30T10:20:37.544Z\",\n      \"completed_at\": \"1987-10-17T10:15:02.563Z\",\n      \"last_activity_at\": \"1968-11-27T17:55:14.011Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1988-11-28T22:05:49.385Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1993-03-17T17:51:15.064Z\"\n        }\n      ]\n    },\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 4104,\n      \"scheduler_id\": 8249,\n      \"status\": \"pending\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"1963-07-28\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 9590,\n      \"started_at\": \"1988-01-21T19:55:37.164Z\",\n      \"completed_at\": \"1946-12-31T04:22:53.388Z\",\n      \"last_activity_at\": \"1978-04-07T20:43:17.657Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"2008-11-09T00:59:40.373Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"2017-10-17T10:41:16.130Z\"\n        }\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"cursor\": \"string\",\n    \"has_more\": true,\n    \"limit\": 164\n  },\n  \"meta\": {\n    \"team_id\": 9575\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e3f9fe3-c912-4530-8f52-1144e4f5b7fb",
+              "name": "API key lacks the required permission or team access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "262d2fb7-6e18-49a2-8d15-ced1a6033642",
+          "name": "Get a session",
+          "request": {
+            "name": "Get a session",
+            "description": {
+              "content": "Get a single session by ID. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "teams",
+                ":teamId",
+                "sessions",
+                ":sessionId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "teamId",
+                  "description": "(Required) The team ID"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "sessionId",
+                  "description": "(Required) The session ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d8aaf004-8b18-4b83-a4a5-98f089348090",
+              "name": "The session",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "sessions",
+                    ":sessionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "sessionId",
+                      "description": "(Required) The session ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"session_id\": \"sess_abc123\",\n    \"team_id\": 8689,\n    \"scheduler_id\": 8101,\n    \"status\": \"booked\",\n    \"customer_info\": {\n      \"name\": \"string\",\n      \"email\": \"string\",\n      \"phone\": \"string\",\n      \"address\": \"string\"\n    },\n    \"issue_type\": \"HVAC Repair\",\n    \"job_type\": \"string\",\n    \"selected_date\": \"2001-02-09\",\n    \"selected_time\": \"string\",\n    \"utm\": {\n      \"source\": \"string\",\n      \"medium\": \"string\",\n      \"campaign\": \"string\",\n      \"term\": \"string\",\n      \"content\": \"string\"\n    },\n    \"google_ads\": {\n      \"gclid\": \"string\",\n      \"wbraid\": \"string\",\n      \"gbraid\": \"string\"\n    },\n    \"st_job_id\": 4303,\n    \"started_at\": \"2023-07-15T22:40:17.952Z\",\n    \"completed_at\": \"1972-09-05T20:30:23.241Z\",\n    \"last_activity_at\": \"2002-05-17T01:20:27.439Z\",\n    \"events\": [\n      {\n        \"event_type\": \"avoca:bookingCompletion\",\n        \"created_at\": \"1967-05-17T03:36:06.950Z\"\n      },\n      {\n        \"event_type\": \"avoca:bookingCompletion\",\n        \"created_at\": \"1986-01-16T09:21:15.884Z\"\n      }\n    ]\n  },\n  \"meta\": {\n    \"team_id\": 5983\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "db61c96b-0497-4f97-8cf3-fad105857ce6",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "sessions",
+                    ":sessionId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "sessionId",
+                      "description": "(Required) The session ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8fcc779e-b524-4e40-b0e2-4d1cb90b5f57",
+          "name": "List bookings",
+          "request": {
+            "name": "List bookings",
+            "description": {
+              "content": "List bookings for a team — sessions with status `booked`. Same query parameters as sessions, minus `status`. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "teams",
+                ":teamId",
+                "bookings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "scheduler_id",
+                  "value": "<integer>",
+                  "description": "Filter to a specific scheduler"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows on/after this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows before this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Results per page (default 50, max 500)"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "teamId",
+                  "description": "(Required) The team ID"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d7a9f1f5-2306-4705-9f80-57cc3b713990",
+              "name": "Paginated bookings",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "bookings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 1913,\n      \"scheduler_id\": 9904,\n      \"status\": \"dropped_off\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"1980-02-20\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 1748,\n      \"started_at\": \"2011-01-30T10:20:37.544Z\",\n      \"completed_at\": \"1987-10-17T10:15:02.563Z\",\n      \"last_activity_at\": \"1968-11-27T17:55:14.011Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1988-11-28T22:05:49.385Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1993-03-17T17:51:15.064Z\"\n        }\n      ]\n    },\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 4104,\n      \"scheduler_id\": 8249,\n      \"status\": \"pending\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"1963-07-28\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 9590,\n      \"started_at\": \"1988-01-21T19:55:37.164Z\",\n      \"completed_at\": \"1946-12-31T04:22:53.388Z\",\n      \"last_activity_at\": \"1978-04-07T20:43:17.657Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"2008-11-09T00:59:40.373Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"2017-10-17T10:41:16.130Z\"\n        }\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"cursor\": \"string\",\n    \"has_more\": true,\n    \"limit\": 164\n  },\n  \"meta\": {\n    \"team_id\": 9575\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8f132997-443e-470e-b316-d895783d6748",
+              "name": "API key lacks the required permission or team access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "bookings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "cd309024-3767-4dd9-920f-c33f1977d267",
+          "name": "Get a booking",
+          "request": {
+            "name": "Get a booking",
+            "description": {
+              "content": "Get a single booking by session ID. Returns 404 if the session exists but is not booked. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "teams",
+                ":teamId",
+                "bookings",
+                ":bookingId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "teamId",
+                  "description": "(Required) The team ID"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "bookingId",
+                  "description": "(Required) The session ID of the booking"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "690bc372-8a13-4480-8c64-73d9f1db80fa",
+              "name": "The booking",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "bookings",
+                    ":bookingId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "bookingId",
+                      "description": "(Required) The session ID of the booking"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"session_id\": \"sess_abc123\",\n    \"team_id\": 8689,\n    \"scheduler_id\": 8101,\n    \"status\": \"booked\",\n    \"customer_info\": {\n      \"name\": \"string\",\n      \"email\": \"string\",\n      \"phone\": \"string\",\n      \"address\": \"string\"\n    },\n    \"issue_type\": \"HVAC Repair\",\n    \"job_type\": \"string\",\n    \"selected_date\": \"2001-02-09\",\n    \"selected_time\": \"string\",\n    \"utm\": {\n      \"source\": \"string\",\n      \"medium\": \"string\",\n      \"campaign\": \"string\",\n      \"term\": \"string\",\n      \"content\": \"string\"\n    },\n    \"google_ads\": {\n      \"gclid\": \"string\",\n      \"wbraid\": \"string\",\n      \"gbraid\": \"string\"\n    },\n    \"st_job_id\": 4303,\n    \"started_at\": \"2023-07-15T22:40:17.952Z\",\n    \"completed_at\": \"1972-09-05T20:30:23.241Z\",\n    \"last_activity_at\": \"2002-05-17T01:20:27.439Z\",\n    \"events\": [\n      {\n        \"event_type\": \"avoca:bookingCompletion\",\n        \"created_at\": \"1967-05-17T03:36:06.950Z\"\n      },\n      {\n        \"event_type\": \"avoca:bookingCompletion\",\n        \"created_at\": \"1986-01-16T09:21:15.884Z\"\n      }\n    ]\n  },\n  \"meta\": {\n    \"team_id\": 5983\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2fe647b7-9dc9-4df5-8768-a321c49ecd59",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "teams",
+                    ":teamId",
+                    "bookings",
+                    ":bookingId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "teamId",
+                      "description": "(Required) The team ID"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "bookingId",
+                      "description": "(Required) The session ID of the booking"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "844fb542-9ef6-470f-8e78-aecd593ec31a",
+          "name": "List sessions (cross-team)",
+          "request": {
+            "name": "List sessions (cross-team)",
+            "description": {
+              "content": "Sessions across all teams accessible to a multi-team key. Supports the same query parameters as the team-scoped endpoint, plus an optional `team_id` filter. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "sessions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "team_id",
+                  "value": "<integer>",
+                  "description": "Filter to one team"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by session status"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows on/after this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows before this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_test_teams",
+                  "value": "false",
+                  "description": "Include designated internal QA/test teams in multi-team aggregations (default false)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Results per page (default 50, max 500)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0688de00-324b-48dc-a218-c336eee53448",
+              "name": "Paginated cross-team sessions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "team_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "include_test_teams",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 2385,\n      \"scheduler_id\": 4718,\n      \"status\": \"pending\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"1989-09-03\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 6824,\n      \"started_at\": \"1985-09-07T23:03:38.957Z\",\n      \"completed_at\": \"1986-05-17T06:37:02.375Z\",\n      \"last_activity_at\": \"1996-02-16T15:08:53.969Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1990-12-04T12:03:27.470Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1973-09-13T00:37:32.872Z\"\n        }\n      ]\n    },\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 2927,\n      \"scheduler_id\": 7929,\n      \"status\": \"booked\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"2007-02-25\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 837,\n      \"started_at\": \"1957-12-30T00:28:57.909Z\",\n      \"completed_at\": \"2011-08-09T08:17:21.399Z\",\n      \"last_activity_at\": \"2010-08-30T13:33:58.515Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"2001-06-17T09:16:33.279Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1984-01-08T02:38:31.804Z\"\n        }\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"cursor\": \"string\",\n    \"has_more\": true,\n    \"limit\": 4979\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2ec44468-a999-4eb7-a8f1-fead5ccd25d1",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "sessions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "team_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "include_test_teams",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "54d1b1bc-bbdd-4ff8-87a7-9fabaf0612bd",
+          "name": "List bookings (cross-team)",
+          "request": {
+            "name": "List bookings (cross-team)",
+            "description": {
+              "content": "Bookings across all teams accessible to a multi-team key. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "bookings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "team_id",
+                  "value": "<integer>",
+                  "description": "Filter to one team"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows on/after this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "Only rows before this ISO 8601 timestamp"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_test_teams",
+                  "value": "false",
+                  "description": "Include designated internal QA/test teams in multi-team aggregations (default false)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Results per page (default 50, max 500)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b3282f04-1ce5-4f15-b92b-ed38a36e20b5",
+              "name": "Paginated cross-team bookings",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "team_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "include_test_teams",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 2385,\n      \"scheduler_id\": 4718,\n      \"status\": \"pending\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"1989-09-03\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 6824,\n      \"started_at\": \"1985-09-07T23:03:38.957Z\",\n      \"completed_at\": \"1986-05-17T06:37:02.375Z\",\n      \"last_activity_at\": \"1996-02-16T15:08:53.969Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1990-12-04T12:03:27.470Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1973-09-13T00:37:32.872Z\"\n        }\n      ]\n    },\n    {\n      \"session_id\": \"sess_abc123\",\n      \"team_id\": 2927,\n      \"scheduler_id\": 7929,\n      \"status\": \"booked\",\n      \"customer_info\": {\n        \"name\": \"string\",\n        \"email\": \"string\",\n        \"phone\": \"string\",\n        \"address\": \"string\"\n      },\n      \"issue_type\": \"HVAC Repair\",\n      \"job_type\": \"string\",\n      \"selected_date\": \"2007-02-25\",\n      \"selected_time\": \"string\",\n      \"utm\": {\n        \"source\": \"string\",\n        \"medium\": \"string\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\"\n      },\n      \"google_ads\": {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\"\n      },\n      \"st_job_id\": 837,\n      \"started_at\": \"1957-12-30T00:28:57.909Z\",\n      \"completed_at\": \"2011-08-09T08:17:21.399Z\",\n      \"last_activity_at\": \"2010-08-30T13:33:58.515Z\",\n      \"events\": [\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"2001-06-17T09:16:33.279Z\"\n        },\n        {\n          \"event_type\": \"avoca:bookingCompletion\",\n          \"created_at\": \"1984-01-08T02:38:31.804Z\"\n        }\n      ]\n    }\n  ],\n  \"pagination\": {\n    \"cursor\": \"string\",\n    \"has_more\": true,\n    \"limit\": 4979\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38a2de8e-fd00-4220-85bd-b54525d79ee9",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v1",
+                    "bookings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "team_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "include_test_teams",
+                      "value": "false"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://enterprise-api.avoca.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3c8f62be-7caa-448d-9259-1f8f435d2ffc",
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Sessions & Bookings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.",
+      "type": "text/plain"
+    }
+  }
+}

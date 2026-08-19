@@ -1,0 +1,988 @@
+{
+  "item": [
+    {
+      "id": "605e4c38-926e-431a-a043-6252946c03f7",
+      "name": "Scheduler Analytics (v0)",
+      "description": {
+        "content": "Simple Scheduler analytics — legacy flat endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "afc57826-73fd-4546-a777-038d57d3533a",
+          "name": "Get scheduler analytics",
+          "request": {
+            "name": "Get scheduler analytics",
+            "description": {
+              "content": "Detailed Simple Scheduler analytics. Select which metric blocks to include with the `metrics` parameter: `funnel`, `bookings`, `chart`, `utm`, `google_ads`, `service_areas`, `issue_types`, `customer_events`. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "scheduler-analytics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Start of date range (ISO 8601; default 7 days ago)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "End of date range (ISO 8601; default now)"
+                },
+                {
+                  "disabled": false,
+                  "key": "timezone",
+                  "value": "America/New_York",
+                  "description": "IANA timezone for date calculations (default America/New_York)"
+                },
+                {
+                  "disabled": false,
+                  "key": "scheduler_id",
+                  "value": "<integer>",
+                  "description": "Filter to a specific scheduler"
+                },
+                {
+                  "disabled": false,
+                  "key": "metrics",
+                  "value": "<string>",
+                  "description": "Comma-separated metric blocks to include (default: all)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Results per page (default 100, max 1000)"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Pagination offset (default 0)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "933b93c9-1303-429d-884d-599ae9a49506",
+              "name": "Requested analytics blocks",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "scheduler-analytics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "America/New_York"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "metrics",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"funnel\": {\n      \"sessions\": 3572,\n      \"bookingStarted\": 8789,\n      \"customerInfoCompleted\": 2706,\n      \"bookingCompleted\": 8105,\n      \"conversionRate\": 4600.146347257723\n    },\n    \"bookings\": {\n      \"total\": 699,\n      \"avgBookingTimeSeconds\": 1135.3514861037095\n    },\n    \"chartData\": [\n      {\n        \"date\": \"1983-04-28\",\n        \"sessions\": 4390,\n        \"conversions\": 1358\n      },\n      {\n        \"date\": \"1969-07-26\",\n        \"sessions\": 8696,\n        \"conversions\": 7924\n      }\n    ],\n    \"utmData\": [\n      {\n        \"source\": \"google\",\n        \"medium\": \"cpc\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\",\n        \"sessions\": 5824,\n        \"conversions\": 169\n      },\n      {\n        \"source\": \"google\",\n        \"medium\": \"cpc\",\n        \"campaign\": \"string\",\n        \"term\": \"string\",\n        \"content\": \"string\",\n        \"sessions\": 2670,\n        \"conversions\": 8975\n      }\n    ],\n    \"googleAdsData\": [\n      {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\",\n        \"sessions\": 9238,\n        \"conversions\": 9300\n      },\n      {\n        \"gclid\": \"string\",\n        \"wbraid\": \"string\",\n        \"gbraid\": \"string\",\n        \"sessions\": 4643,\n        \"conversions\": 5197\n      }\n    ],\n    \"serviceAreaData\": [\n      {\n        \"serviceArea\": \"string\",\n        \"count\": 9162\n      },\n      {\n        \"serviceArea\": \"string\",\n        \"count\": 4400\n      }\n    ],\n    \"issueTypeData\": [\n      {\n        \"issueType\": \"string\",\n        \"count\": 9969\n      },\n      {\n        \"issueType\": \"string\",\n        \"count\": 7049\n      }\n    ],\n    \"customerEvents\": [\n      {\n        \"sessionId\": \"string\",\n        \"status\": \"string\",\n        \"customerInfo\": {\n          \"name\": \"string\",\n          \"email\": \"string\",\n          \"phone\": \"string\",\n          \"address\": \"string\"\n        },\n        \"issueType\": \"string\",\n        \"jobType\": \"string\",\n        \"selectedDate\": \"string\",\n        \"selectedTime\": \"string\",\n        \"utmSource\": \"string\",\n        \"gclid\": \"string\",\n        \"conversionValue\": 8455.117992580277,\n        \"lastActivity\": \"2003-02-17T01:12:56.408Z\"\n      },\n      {\n        \"sessionId\": \"string\",\n        \"status\": \"string\",\n        \"customerInfo\": {\n          \"name\": \"string\",\n          \"email\": \"string\",\n          \"phone\": \"string\",\n          \"address\": \"string\"\n        },\n        \"issueType\": \"string\",\n        \"jobType\": \"string\",\n        \"selectedDate\": \"string\",\n        \"selectedTime\": \"string\",\n        \"utmSource\": \"string\",\n        \"gclid\": \"string\",\n        \"conversionValue\": 8141.93713174459,\n        \"lastActivity\": \"1946-12-09T00:44:09.193Z\"\n      }\n    ]\n  },\n  \"pagination\": {\n    \"limit\": 5680,\n    \"offset\": 7054,\n    \"has_more\": false\n  },\n  \"metadata\": {\n    \"startDate\": \"2024-04-27T10:22:38.212Z\",\n    \"endDate\": \"1988-10-03T03:27:59.767Z\",\n    \"timezone\": \"string\",\n    \"schedulerId\": 8800,\n    \"metricsRequested\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "10d0e51f-d95e-4b9b-ab15-4ac0e2617135",
+              "name": "Invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "scheduler-analytics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "America/New_York"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "metrics",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "898217c6-924d-4037-992e-1ee963466bd1",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "scheduler-analytics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "America/New_York"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "metrics",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e28b2188-2f76-478a-af60-0d02b78accec",
+          "name": "Get scheduler analytics summary",
+          "request": {
+            "name": "Get scheduler analytics summary",
+            "description": {
+              "content": "Summary Simple Scheduler stats for today, this week, and this month. Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "scheduler-analytics",
+                "summary"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "timezone",
+                  "value": "America/New_York",
+                  "description": "IANA timezone for date calculations (default America/New_York)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3654cb99-b449-4032-80f3-62c5508fb59f",
+              "name": "Summary stats",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "scheduler-analytics",
+                    "summary"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "timezone",
+                      "value": "America/New_York"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"today\": {\n      \"sessions\": 312,\n      \"bookings\": 89,\n      \"conversionRate\": 28.5\n    },\n    \"thisWeek\": {\n      \"sessions\": 312,\n      \"bookings\": 89,\n      \"conversionRate\": 28.5\n    },\n    \"thisMonth\": {\n      \"sessions\": 312,\n      \"bookings\": 89,\n      \"conversionRate\": 28.5\n    }\n  },\n  \"metadata\": {\n    \"timezone\": \"string\",\n    \"generatedAt\": \"1999-11-18T08:15:53.343Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1006bae9-6a06-4d2c-81da-e93e94f8406f",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "scheduler-analytics",
+                    "summary"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "timezone",
+                      "value": "America/New_York"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4fc00911-0aec-42d1-a12f-36ce60b1c2de",
+          "name": "List Simple Scheduler booking requests",
+          "request": {
+            "name": "List Simple Scheduler booking requests",
+            "description": {
+              "content": "Booking requests submitted through Simple Scheduler. Supports offset pagination (`offset` + `limit`, returns `meta.total`) or cursor pagination (`cursor` = `created_at` from a previous page; response includes `next_cursor` and `has_more`). Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "simple_scheduler_booking_requests"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by request status"
+                },
+                {
+                  "disabled": false,
+                  "key": "scheduler_id",
+                  "value": "<integer>",
+                  "description": "Filter to a specific scheduler"
+                },
+                {
+                  "disabled": false,
+                  "key": "has_utm",
+                  "value": "<boolean>",
+                  "description": "When `true`, only requests with UTM attribution"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<dateTime>",
+                  "description": "ISO 8601 `created_at` cursor from a previous page (cursor mode)"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Results per page (default 50, max 500)"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Pagination offset (default 0)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "da983450-9a35-4a41-8b31-e34881c4218d",
+              "name": "Booking requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "simple_scheduler_booking_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "has_utm",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 3466,\n      \"team_id\": 4538,\n      \"scheduler_id\": 9812,\n      \"status\": \"string\",\n      \"st_job_id\": 6461,\n      \"created_at\": \"1984-05-10T14:30:42.487Z\",\n      \"request_data\": {}\n    },\n    {\n      \"id\": 5359,\n      \"team_id\": 5527,\n      \"scheduler_id\": 4679,\n      \"status\": \"string\",\n      \"st_job_id\": 6918,\n      \"created_at\": \"1953-07-30T04:24:09.352Z\",\n      \"request_data\": {}\n    }\n  ],\n  \"meta\": {\n    \"total\": 4809,\n    \"next_cursor\": \"string\",\n    \"has_more\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b357f3eb-1879-4339-af23-293dedab516e",
+              "name": "Invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "simple_scheduler_booking_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "has_utm",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0eb72113-1392-4607-b053-77c97dbb6a75",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "simple_scheduler_booking_requests"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "scheduler_id",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "has_utm",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e9066cf8-d3d0-4edb-9059-21ca9a292f25",
+          "name": "List Simple Scheduler configs",
+          "request": {
+            "name": "List Simple Scheduler configs",
+            "description": {
+              "content": "Scheduler configurations for the team. Team is resolved from `x-team-id` or the optional `team_id` query parameter (multi-team keys must have access to that team). Requires the `read:scheduler_analytics` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "simple_scheduler_config"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "team_id",
+                  "value": "<integer>",
+                  "description": "Target team (alternative to the x-team-id header for multi-team keys)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "18aa1f8e-41fc-4b2a-be43-15aaeecbc8b6",
+              "name": "Scheduler configs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "simple_scheduler_config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "team_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 155,\n      \"team_id\": 2504,\n      \"name\": \"string\",\n      \"created_at\": \"1976-08-01T22:03:28.281Z\",\n      \"updated_at\": \"1991-01-16T06:57:12.652Z\"\n    },\n    {\n      \"id\": 7067,\n      \"team_id\": 4701,\n      \"name\": \"string\",\n      \"created_at\": \"1986-01-04T10:11:49.027Z\",\n      \"updated_at\": \"1977-12-28T23:40:26.556Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1c434b94-897c-4c56-8d9d-b90c92d970f4",
+              "name": "API key lacks the required permission or team access",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "simple_scheduler_config"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "team_id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://enterprise-api.avoca.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "940ca66f-7179-48e5-b222-c179ddb4c124",
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Scheduler Analytics (v0) API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.",
+      "type": "text/plain"
+    }
+  }
+}

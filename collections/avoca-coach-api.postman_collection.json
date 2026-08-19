@@ -1,0 +1,570 @@
+{
+  "item": [
+    {
+      "id": "e6659924-d777-4e74-98fb-24627599d0d1",
+      "name": "Coach",
+      "description": {
+        "content": "Coach (QA) call evaluations and rubrics",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d35e9db4-eacc-4172-9d4e-4ce4b7f8f67d",
+          "name": "List coach call evaluations",
+          "request": {
+            "name": "List coach call evaluations",
+            "description": {
+              "content": "List evaluated coach (QA) calls for the team, newest first. Each row includes the score, awarded/max points, per-item evaluation answers, and the `rubric_id` for joining to `GET /api/coach/rubrics`. Requires the `read:coach` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "coach"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Results per page (default 100, max 1000)"
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Pagination offset (default 0)"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<dateTime>",
+                  "description": "Start of date range (ISO 8601; default 7 days ago)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<dateTime>",
+                  "description": "End of date range (ISO 8601; default now)"
+                },
+                {
+                  "disabled": false,
+                  "key": "timezone",
+                  "value": "America/New_York",
+                  "description": "IANA timezone for date calculations (default America/New_York)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1f1f370d-7283-412f-adf5-07e7b750eb38",
+              "name": "Paginated list of coach calls",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "coach"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "America/New_York"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"call_id\": 1886,\n      \"team_id\": 675,\n      \"rubric_id\": 7089,\n      \"call_date\": \"1960-04-26T16:04:49.484Z\",\n      \"call_time_local\": \"14:32:05\",\n      \"duration_seconds\": 2438,\n      \"score\": 8398.643201266015,\n      \"awarded_points\": 1086.310670498437,\n      \"max_available_points\": 4399.468022816166,\n      \"five9_call_id\": \"string\",\n      \"agent_name\": \"string\",\n      \"agent_id\": \"string\",\n      \"customer_name\": \"string\",\n      \"customer_phone\": \"string\",\n      \"call_type\": \"string\",\n      \"call_reason\": \"string\",\n      \"direction\": \"Inbound\",\n      \"evaluation_answers\": {\n        \"key_0\": \"string\"\n      }\n    },\n    {\n      \"call_id\": 2424,\n      \"team_id\": 9029,\n      \"rubric_id\": 7799,\n      \"call_date\": \"1950-05-05T20:24:40.141Z\",\n      \"call_time_local\": \"14:32:05\",\n      \"duration_seconds\": 2576,\n      \"score\": 5378.833704019994,\n      \"awarded_points\": 7370.425045245646,\n      \"max_available_points\": 4144.503973778065,\n      \"five9_call_id\": \"string\",\n      \"agent_name\": \"string\",\n      \"agent_id\": \"string\",\n      \"customer_name\": \"string\",\n      \"customer_phone\": \"string\",\n      \"call_type\": \"string\",\n      \"call_reason\": \"string\",\n      \"direction\": \"Inbound\",\n      \"evaluation_answers\": {\n        \"key_0\": \"string\",\n        \"key_1\": \"string\",\n        \"key_2\": \"string\"\n      }\n    }\n  ],\n  \"pagination\": {\n    \"limit\": 3590,\n    \"offset\": 3227,\n    \"has_more\": true\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32200c1c-816e-4bb2-9ece-2832d4650920",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "coach"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "America/New_York"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "df6e8c10-a422-41f6-9749-f32549afd638",
+          "name": "Get a coach call evaluation",
+          "request": {
+            "name": "Get a coach call evaluation",
+            "description": {
+              "content": "Get a single evaluated coach call by its numeric ID. Requires the `read:coach` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "coach",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) Coach call ID (number)"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b7b8f437-590e-4f21-a1c0-0d6b060d5b9f",
+              "name": "The coach call",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "coach",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Coach call ID (number)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"call_id\": 9166,\n    \"team_id\": 6376,\n    \"rubric_id\": 7375,\n    \"call_date\": \"1998-12-14T23:27:32.930Z\",\n    \"call_time_local\": \"14:32:05\",\n    \"duration_seconds\": 6122,\n    \"score\": 443.25410497040417,\n    \"awarded_points\": 3872.128158250048,\n    \"max_available_points\": 615.6724843594008,\n    \"five9_call_id\": \"string\",\n    \"agent_name\": \"string\",\n    \"agent_id\": \"string\",\n    \"customer_name\": \"string\",\n    \"customer_phone\": \"string\",\n    \"call_type\": \"string\",\n    \"call_reason\": \"string\",\n    \"direction\": \"Inbound\",\n    \"evaluation_answers\": {\n      \"key_0\": \"string\",\n      \"key_1\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "673b7679-91f2-4bf8-9cd1-8ba6afc02682",
+              "name": "Resource not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "coach",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Coach call ID (number)"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "df5f5f3e-8a3b-4ef7-8822-041f72eaef0f",
+          "name": "List coach rubrics",
+          "request": {
+            "name": "List coach rubrics",
+            "description": {
+              "content": "Reference endpoint: lists the team's enabled rubrics. Items provide the key → name mapping for the `evaluation_answers` keys returned on coach calls. Requires the `read:coach` permission.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "coach",
+                "rubrics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                "key": "x-team-id",
+                "value": "<integer>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b7968289-3ea3-4c2f-bdc9-7cddd9826f48",
+              "name": "Enabled rubrics with item key/name pairs",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "coach",
+                    "rubrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 8686,\n      \"title\": \"string\",\n      \"items\": [\n        {\n          \"key\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"name\": \"string\"\n        }\n      ]\n    },\n    {\n      \"id\": 1292,\n      \"title\": \"string\",\n      \"items\": [\n        {\n          \"key\": \"string\",\n          \"name\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"name\": \"string\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a9e8dcd9-5d79-458f-a038-d781ccb4ebdd",
+              "name": "Missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "coach",
+                    "rubrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.",
+                    "key": "x-team-id",
+                    "value": "<integer>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\",\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://enterprise-api.avoca.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2c7731e5-b438-4248-84c9-662ea69c6526",
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Coach API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.",
+      "type": "text/plain"
+    }
+  }
+}

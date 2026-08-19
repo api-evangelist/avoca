@@ -1,0 +1,190 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Scheduler Analytics (v0) API",
+    "version": "1.3.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Scheduler Analytics (v0)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get scheduler analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/scheduler-analytics",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "IANA timezone for date calculations (default America/New_York)"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              },
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated metric blocks to include (default: all)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 100, max 1000)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset (default 0)"
+              }
+            ]
+          },
+          "docs": "Detailed Simple Scheduler analytics. Select which metric blocks to include with the `metrics` parameter: `funnel`, `bookings`, `chart`, `utm`, `google_ads`, `service_areas`, `issue_types`, `customer_events`. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "Get scheduler analytics summary",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/scheduler-analytics/summary",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "IANA timezone for date calculations (default America/New_York)"
+              }
+            ]
+          },
+          "docs": "Summary Simple Scheduler stats for today, this week, and this month. Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "List Simple Scheduler booking requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/simple_scheduler_booking_requests",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by request status"
+              },
+              {
+                "name": "scheduler_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to a specific scheduler"
+              },
+              {
+                "name": "has_utm",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, only requests with UTM attribution"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "ISO 8601 `created_at` cursor from a previous page (cursor mode)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset (default 0)"
+              }
+            ]
+          },
+          "docs": "Booking requests submitted through Simple Scheduler. Supports offset pagination (`offset` + `limit`, returns `meta.total`) or cursor pagination (`cursor` = `created_at` from a previous page; response includes `next_cursor` and `has_more`). Requires the `read:scheduler_analytics` permission."
+        },
+        {
+          "info": {
+            "name": "List Simple Scheduler configs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/simple_scheduler_config",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "team_id",
+                "value": "",
+                "type": "query",
+                "description": "Target team (alternative to the x-team-id header for multi-team keys)"
+              }
+            ]
+          },
+          "docs": "Scheduler configurations for the team. Team is resolved from `x-team-id` or the optional `team_id` query parameter (multi-team keys must have access to that team). Requires the `read:scheduler_analytics` permission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

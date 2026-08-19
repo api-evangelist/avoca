@@ -1,0 +1,237 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Avoca Enterprise Analytics (v1) Analytics (v1) Leads API",
+    "version": "1.3.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Leads",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List unified leads (v0)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/leads",
+            "headers": [
+              {
+                "name": "x-team-id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of date range (ISO 8601; default 7 days ago)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of date range (ISO 8601; default now)"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by lead type"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 100, max 1000)"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Pagination offset (default 0)"
+              }
+            ]
+          },
+          "docs": "Channel-touchpoint aggregation of leads across calls, the scheduling widget, web chat, text, and Google LSA. This is **not** the canonical leads record and does not include the raw third-party payload — for that, use the v1 leads feed (`GET /api/v1/teams/{teamId}/leads`). Requires the `read:leads` permission."
+        },
+        {
+          "info": {
+            "name": "List leads (single team)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/teams/:teamId/leads",
+            "params": [
+              {
+                "name": "teamId",
+                "value": "",
+                "type": "path",
+                "description": "The team ID"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Inclusive lower bound on `created_at` (>=)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Exclusive upper bound on `created_at` (<)"
+              },
+              {
+                "name": "medium",
+                "value": "",
+                "type": "query",
+                "description": "Lead-source medium"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Lead-source canonical `name` (exact match)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Lead processing status"
+              },
+              {
+                "name": "include_raw",
+                "value": "",
+                "type": "query",
+                "description": "When `false`, omit the `raw` third-party payload field (default true)"
+              },
+              {
+                "name": "include_ignored",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)"
+              },
+              {
+                "name": "include_test_numbers",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, include leads from the team's registered test phone numbers (default false)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "The canonical leads feed for one team: the historical/pull counterpart to the `lead.*` event webhooks, including the raw third-party payload. Keyset cursor-paginated ascending by `(created_at, id)`. Leads from registered test phone numbers are excluded by default (`include_test_numbers=true` opts in). Requires the `read:leads` permission."
+        },
+        {
+          "info": {
+            "name": "List leads (all brands)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://enterprise-api.avoca.ai/api/v1/enterprise/:enterpriseId/leads",
+            "params": [
+              {
+                "name": "enterpriseId",
+                "value": "",
+                "type": "path",
+                "description": "The enterprise ID"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Inclusive lower bound on `created_at` (>=)"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "Exclusive upper bound on `created_at` (<)"
+              },
+              {
+                "name": "medium",
+                "value": "",
+                "type": "query",
+                "description": "Lead-source medium"
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Lead-source canonical `name` (exact match)"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Lead processing status"
+              },
+              {
+                "name": "include_raw",
+                "value": "",
+                "type": "query",
+                "description": "When `false`, omit the `raw` third-party payload field (default true)"
+              },
+              {
+                "name": "include_ignored",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)"
+              },
+              {
+                "name": "include_test_numbers",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, include leads from the team's registered test phone numbers (default false)"
+              },
+              {
+                "name": "include_test_teams",
+                "value": "",
+                "type": "query",
+                "description": "Include designated internal QA/test teams in multi-team aggregations (default false)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the previous response's `pagination.cursor`"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Results per page (default 50, max 500)"
+              }
+            ]
+          },
+          "docs": "The canonical leads feed across every team (brand) in the enterprise. Requires an `enterprise_all_teams` key whose enterprise matches the path — single-team and portfolio keys receive 403. Every row carries `team_id`. Same query parameters as the single-team feed. Requires the `read:leads` permission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
