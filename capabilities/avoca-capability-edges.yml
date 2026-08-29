@@ -1,0 +1,36 @@
+slug: avoca
+provider: Avoca
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Telecommunications
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Calls
+  spec_file: avoca-calls-api-openapi.yml
+  capability_id: BC-430.30
+  capability_id_l1: BC-430
+  capability_name: Contact Centre Operations Management
+  confidence: 0.7
+  evidence: GET /api/calls  List calls; GET /api/calls/{id}/transcript  Get a call transcript; GET /api/calls/pre-call-transfers  List
+    pre-call transfers
+  reason: Inbound call records, transcripts and transfer records for an AI front-office that 'answer inbound
+    calls, texts, and web chats 24/7' — contact-centre interaction records. Some ambiguity between inquiry
+    management and contact centre operations.
+- tag: Leads
+  spec_file: avoca-leads-api-openapi.yml
+  capability_id: BC-410.30
+  capability_id_l1: BC-410
+  capability_name: Opportunity & Pipeline Management
+  confidence: 0.7
+  evidence: GET /api/leads  List unified leads (v0); GET /api/v1/enterprise/{enterpriseId}/leads  List
+    leads (all brands)
+  reason: Exposes lead records captured from inbound contacts across teams/brands — lead lifecycle data,
+    i.e. opportunity & pipeline management. Read-only nature adds mild ambiguity.

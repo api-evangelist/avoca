@@ -242,6 +242,9 @@ apis:
   - type: DataModel
     url: data-model/avoca-data-model.yml
 common:
+- type: CapabilityMap
+  url: capabilities/avoca-capability-edges.yml
+  name: Avoca Business Capability Map
 - type: MCPServer
   url: mcp/avoca-mcp.yml
 - type: Overlay
