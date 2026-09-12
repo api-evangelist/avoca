@@ -243,6 +243,8 @@ apis:
   - type: DataModel
     url: data-model/avoca-data-model.yml
 common:
+- type: Website
+  url: https://www.avoca.ai/
 - type: CapabilityMap
   url: capabilities/avoca-capability-edges.yml
   name: Avoca Business Capability Map
