@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Avoca Enterprise Analytics (v1) Analytics (v1) Leads API
+  title: Avoca Enterprise Leads API
   description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
   version: 1.3.0
 servers:
@@ -140,40 +140,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
 components:
   parameters:
-    limit500default50:
-      name: limit
-      in: query
-      description: Results per page (default 50, max 500)
-      schema:
-        type: integer
-        default: 50
-        maximum: 500
-    leadsIncludeIgnored:
-      name: include_ignored
-      in: query
-      description: When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)
-      schema:
-        type: boolean
-        default: false
-    leadsStatus:
-      name: status
-      in: query
-      description: Lead processing status
-      schema:
-        type: string
-        enum:
-        - created
-        - queued
-        - processing
-        - completed
-        - failed
-        - skipped
-    leadsSource:
-      name: source
-      in: query
-      description: Lead-source canonical `name` (exact match)
-      schema:
-        type: string
     offset:
       name: offset
       in: query
@@ -181,20 +147,6 @@ components:
       schema:
         type: integer
         default: 0
-    leadsStartDate:
-      name: start_date
-      in: query
-      description: Inclusive lower bound on `created_at` (>=)
-      schema:
-        type: string
-        format: date-time
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
     leadsMedium:
       name: medium
       in: query
@@ -210,38 +162,11 @@ components:
         - yelp
         - web_chat
         - dropped_responder
-    leadsEndDate:
-      name: end_date
-      in: query
-      description: Exclusive upper bound on `created_at` (<)
-      schema:
-        type: string
-        format: date-time
-    leadsIncludeTestNumbers:
-      name: include_test_numbers
-      in: query
-      description: When `true`, include leads from the team's registered test phone numbers (default false)
-      schema:
-        type: boolean
-        default: false
-    includeTestTeams:
-      name: include_test_teams
-      in: query
-      description: Include designated internal QA/test teams in multi-team aggregations (default false)
-      schema:
-        type: boolean
-        default: false
-    leadsIncludeRaw:
-      name: include_raw
-      in: query
-      description: When `false`, omit the `raw` third-party payload field (default true)
-      schema:
-        type: boolean
-        default: true
-    xTeamId:
-      name: x-team-id
-      in: header
-      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
       schema:
         type: integer
     limit1000:
@@ -252,6 +177,66 @@ components:
         type: integer
         default: 100
         maximum: 1000
+    leadsIncludeIgnored:
+      name: include_ignored
+      in: query
+      description: When `true`, include suppressed leads (adds `is_ignored` / `ignored_reason`)
+      schema:
+        type: boolean
+        default: false
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+    leadsEndDate:
+      name: end_date
+      in: query
+      description: Exclusive upper bound on `created_at` (<)
+      schema:
+        type: string
+        format: date-time
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+    leadsSource:
+      name: source
+      in: query
+      description: Lead-source canonical `name` (exact match)
+      schema:
+        type: string
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    leadsStatus:
+      name: status
+      in: query
+      description: Lead processing status
+      schema:
+        type: string
+        enum:
+        - created
+        - queued
+        - processing
+        - completed
+        - failed
+        - skipped
+    leadsIncludeRaw:
+      name: include_raw
+      in: query
+      description: When `false`, omit the `raw` third-party payload field (default true)
+      schema:
+        type: boolean
+        default: true
     endDateNow:
       name: end_date
       in: query
@@ -259,16 +244,31 @@ components:
       schema:
         type: string
         format: date-time
-    cursor:
-      name: cursor
+    limit500default50:
+      name: limit
       in: query
-      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      description: Results per page (default 50, max 500)
       schema:
-        type: string
-    startDate7d:
+        type: integer
+        default: 50
+        maximum: 500
+    leadsIncludeTestNumbers:
+      name: include_test_numbers
+      in: query
+      description: When `true`, include leads from the team's registered test phone numbers (default false)
+      schema:
+        type: boolean
+        default: false
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
+    leadsStartDate:
       name: start_date
       in: query
-      description: Start of date range (ISO 8601; default 7 days ago)
+      description: Inclusive lower bound on `created_at` (>=)
       schema:
         type: string
         format: date-time
@@ -284,15 +284,66 @@ components:
           description: Human-readable description (newer endpoints)
       required:
       - error
-    OffsetPagination:
+    CursorPagination:
       type: object
       properties:
-        limit:
-          type: integer
-        offset:
-          type: integer
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
         has_more:
           type: boolean
+        limit:
+          type: integer
+    LeadV0:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        datetime:
+          type: string
+          format: date-time
+        type:
+          type: string
+          enum:
+          - call
+          - scheduling_widget
+          - web_chat
+          - text
+          - google_lsa
+        customer_phone:
+          type:
+          - string
+          - 'null'
+        customer_email:
+          type:
+          - string
+          - 'null'
+        lead_content:
+          type: object
+          description: Channel-specific lead content
+        agent:
+          type:
+          - string
+          - 'null'
+          description: Assistant ID that handled the touchpoint
+        referrer_url:
+          type:
+          - string
+          - 'null'
+        attribution:
+          type: object
+          properties:
+            utm_source:
+              type:
+              - string
+              - 'null'
+            gclid:
+              type:
+              - string
+              - 'null'
     LeadV1:
       type: object
       description: A canonical lead record — the pull counterpart to the `lead.*` event webhooks.
@@ -451,75 +502,24 @@ components:
       properties:
         team_id:
           type: integer
-    CursorPagination:
+    OffsetPagination:
       type: object
       properties:
-        cursor:
-          type:
-          - string
-          - 'null'
-          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
-        has_more:
-          type: boolean
         limit:
           type: integer
-    LeadV0:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        datetime:
-          type: string
-          format: date-time
-        type:
-          type: string
-          enum:
-          - call
-          - scheduling_widget
-          - web_chat
-          - text
-          - google_lsa
-        customer_phone:
-          type:
-          - string
-          - 'null'
-        customer_email:
-          type:
-          - string
-          - 'null'
-        lead_content:
-          type: object
-          description: Channel-specific lead content
-        agent:
-          type:
-          - string
-          - 'null'
-          description: Assistant ID that handled the touchpoint
-        referrer_url:
-          type:
-          - string
-          - 'null'
-        attribution:
-          type: object
-          properties:
-            utm_source:
-              type:
-              - string
-              - 'null'
-            gclid:
-              type:
-              - string
-              - 'null'
+        offset:
+          type: integer
+        has_more:
+          type: boolean
   responses:
-    Forbidden:
-      description: API key lacks the required permission or team access
+    Unauthorized:
+      description: Missing or invalid API key
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key
+    Forbidden:
+      description: API key lacks the required permission or team access
       content:
         application/json:
           schema:

@@ -1,14 +1,7 @@
 {
   "provider": "avoca",
   "sources": [
-    "avoca-analytics-v1-api-openapi.yml",
-    "avoca-calls-api-openapi.yml",
-    "avoca-coach-api-openapi.yml",
-    "avoca-leads-api-openapi.yml",
-    "avoca-outbound-texting-api-openapi.yml",
-    "avoca-scheduler-analytics-v0-api-openapi.yml",
-    "avoca-sessions-bookings-api-openapi.yml",
-    "avoca-teams-api-openapi.yml"
+    "_original/avoca-openapi-original.json"
   ],
   "outputs": [
     "avoca-analytics-v1-api-openapi.yml",
@@ -23,6 +16,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "avoca-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "avoca-analytics-v1-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avoca-calls-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avoca-coach-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avoca-leads-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avoca-outbound-texting-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avoca-scheduler-analytics-v0-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avoca-sessions-bookings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "avoca-teams-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

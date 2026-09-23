@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Avoca Enterprise Analytics (v1) Analytics (v1) Teams API
+  title: Avoca Enterprise Teams API
   description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
   version: 1.3.0
 servers:
@@ -56,18 +56,22 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  parameters:
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Team:
-      type: object
-      properties:
-        id:
-          type: integer
-          examples:
-          - 808
-        name:
-          type: string
-          examples:
-          - Acme Plumbing
     Error:
       type: object
       properties:
@@ -79,21 +83,17 @@ components:
           description: Human-readable description (newer endpoints)
       required:
       - error
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    includeTestTeams:
-      name: include_test_teams
-      in: query
-      description: Include designated internal QA/test teams in multi-team aggregations (default false)
-      schema:
-        type: boolean
-        default: false
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+          examples:
+          - 808
+        name:
+          type: string
+          examples:
+          - Acme Plumbing
   securitySchemes:
     bearerAuth:
       type: http

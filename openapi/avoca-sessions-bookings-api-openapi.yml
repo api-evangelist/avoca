@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Avoca Enterprise Analytics (v1) Analytics (v1) Sessions & Bookings API
+  title: Avoca Enterprise Sessions & Bookings API
   description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
   version: 1.3.0
 servers:
@@ -264,50 +264,35 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  parameters:
-    includeTestTeams:
-      name: include_test_teams
-      in: query
-      description: Include designated internal QA/test teams in multi-team aggregations (default false)
-      schema:
-        type: boolean
-        default: false
-    startDate:
-      name: start_date
-      in: query
-      description: Only rows on/after this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    endDate:
-      name: end_date
-      in: query
-      description: Only rows before this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
-    cursor:
-      name: cursor
-      in: query
-      description: Opaque pagination cursor from the previous response's `pagination.cursor`
-      schema:
-        type: string
-    limit500default50:
-      name: limit
-      in: query
-      description: Results per page (default 50, max 500)
-      schema:
-        type: integer
-        default: 50
-        maximum: 500
   schemas:
+    CursorPagination:
+      type: object
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
+        has_more:
+          type: boolean
+        limit:
+          type: integer
+    TeamMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
     Session:
       type: object
       description: A customer's journey through the scheduling widget — from starting a booking to completing it or dropping off.
@@ -434,37 +419,52 @@ components:
               created_at:
                 type: string
                 format: date-time
-    TeamMeta:
-      type: object
-      properties:
-        team_id:
-          type: integer
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
-    CursorPagination:
-      type: object
-      properties:
-        cursor:
-          type:
-          - string
-          - 'null'
-          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
-        has_more:
-          type: boolean
-        limit:
-          type: integer
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    endDate:
+      name: end_date
+      in: query
+      description: Only rows before this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+    limit500default50:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
   responses:
-    Forbidden:
-      description: API key lacks the required permission or team access
+    Unauthorized:
+      description: Missing or invalid API key
       content:
         application/json:
           schema:
@@ -475,8 +475,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key
+    Forbidden:
+      description: API key lacks the required permission or team access
       content:
         application/json:
           schema:

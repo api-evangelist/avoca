@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Avoca Enterprise Analytics (v1) Analytics (v1) Outbound Texting API
+  title: Avoca Enterprise Outbound Texting API
   description: 'Read-only programmatic access to Avoca data: calls, transcripts, leads, coach evaluations, Simple Scheduler sessions and analytics, and outbound texting activity.'
   version: 1.3.0
 servers:
@@ -95,27 +95,18 @@ paths:
           $ref: '#/components/responses/Forbidden'
 components:
   schemas:
-    CampaignText:
+    CursorPagination:
       type: object
       properties:
-        action:
-          type: string
-          description: Constant `outbound_message` — this feed is outbound-only
-        customer_id:
+        cursor:
           type:
           - string
           - 'null'
-          description: Conversation's resolved CRM customer ID
-        campaign_name:
-          type: string
-        customer_response:
-          type: string
-          description: Body of the customer's first inbound reply, else `no response`
-        created_date:
-          type: string
-          format: date-time
-        phone_number:
-          type: string
+          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
+        has_more:
+          type: boolean
+        limit:
+          type: integer
     TeamMeta:
       type: object
       properties:
@@ -150,26 +141,28 @@ components:
           description: Human-readable description (newer endpoints)
       required:
       - error
-    CursorPagination:
+    CampaignText:
       type: object
       properties:
-        cursor:
+        action:
+          type: string
+          description: Constant `outbound_message` — this feed is outbound-only
+        customer_id:
           type:
           - string
           - 'null'
-          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
-        has_more:
-          type: boolean
-        limit:
-          type: integer
+          description: Conversation's resolved CRM customer ID
+        campaign_name:
+          type: string
+        customer_response:
+          type: string
+          description: Body of the customer's first inbound reply, else `no response`
+        created_date:
+          type: string
+          format: date-time
+        phone_number:
+          type: string
   parameters:
-    startDate:
-      name: start_date
-      in: query
-      description: Only rows on/after this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
     endDate:
       name: end_date
       in: query
@@ -177,19 +170,19 @@ components:
       schema:
         type: string
         format: date-time
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
     cursor:
       name: cursor
       in: query
       description: Opaque pagination cursor from the previous response's `pagination.cursor`
       schema:
         type: string
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
     limit500default50:
       name: limit
       in: query
@@ -198,6 +191,13 @@ components:
         type: integer
         default: 50
         maximum: 500
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
   responses:
     Forbidden:
       description: API key lacks the required permission or team access
