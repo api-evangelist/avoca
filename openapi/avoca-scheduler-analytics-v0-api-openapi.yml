@@ -220,6 +220,19 @@ paths:
           $ref: '#/components/responses/Forbidden'
 components:
   parameters:
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
     limit500:
       name: limit
       in: query
@@ -228,20 +241,6 @@ components:
         type: integer
         default: 50
         maximum: 500
-    startDate7d:
-      name: start_date
-      in: query
-      description: Start of date range (ISO 8601; default 7 days ago)
-      schema:
-        type: string
-        format: date-time
-    offset:
-      name: offset
-      in: query
-      description: Pagination offset (default 0)
-      schema:
-        type: integer
-        default: 0
     limit1000:
       name: limit
       in: query
@@ -250,10 +249,17 @@ components:
         type: integer
         default: 100
         maximum: 1000
-    endDateNow:
-      name: end_date
+    offset:
+      name: offset
       in: query
-      description: End of date range (ISO 8601; default now)
+      description: Pagination offset (default 0)
+      schema:
+        type: integer
+        default: 0
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
       schema:
         type: string
         format: date-time
@@ -264,12 +270,6 @@ components:
       schema:
         type: string
         default: America/New_York
-    xTeamId:
-      name: x-team-id
-      in: header
-      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
-      schema:
-        type: integer
   schemas:
     SchedulerConfig:
       type: object
@@ -286,32 +286,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
-    PeriodSummary:
-      type: object
-      properties:
-        sessions:
-          type: integer
-          examples:
-          - 312
-        bookings:
-          type: integer
-          examples:
-          - 89
-        conversionRate:
-          type: number
-          examples:
-          - 28.5
     UtmRow:
       type: object
       properties:
@@ -333,15 +307,6 @@ components:
           type: integer
         conversions:
           type: integer
-    OffsetPagination:
-      type: object
-      properties:
-        limit:
-          type: integer
-        offset:
-          type: integer
-        has_more:
-          type: boolean
     SchedulerAnalytics:
       type: object
       description: 'Metric blocks are present only when requested via the `metrics` parameter (default: all).'
@@ -477,6 +442,41 @@ components:
                 - string
                 - 'null'
                 format: date-time
+    PeriodSummary:
+      type: object
+      properties:
+        sessions:
+          type: integer
+          examples:
+          - 312
+        bookings:
+          type: integer
+          examples:
+          - 89
+        conversionRate:
+          type: number
+          examples:
+          - 28.5
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    OffsetPagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
   responses:
     Unauthorized:
       description: Missing or invalid API key

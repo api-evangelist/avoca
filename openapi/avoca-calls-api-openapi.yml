@@ -177,13 +177,19 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   parameters:
-    startDate7d:
-      name: start_date
+    endDateNow:
+      name: end_date
       in: query
-      description: Start of date range (ISO 8601; default 7 days ago)
+      description: End of date range (ISO 8601; default now)
       schema:
         type: string
         format: date-time
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
     limit1000:
       name: limit
       in: query
@@ -199,19 +205,32 @@ components:
       schema:
         type: integer
         default: 0
-    endDateNow:
-      name: end_date
+    startDate7d:
+      name: start_date
       in: query
-      description: End of date range (ISO 8601; default now)
+      description: Start of date range (ISO 8601; default 7 days ago)
       schema:
         type: string
         format: date-time
-    xTeamId:
-      name: x-team-id
-      in: header
-      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
-      schema:
-        type: integer
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     Call:
       type: object
@@ -266,26 +285,6 @@ components:
           - 'null'
           examples:
           - '+11234567890'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
-    OffsetPagination:
-      type: object
-      properties:
-        limit:
-          type: integer
-        offset:
-          type: integer
-        has_more:
-          type: boolean
     PreCallTransfer:
       type: object
       properties:
@@ -325,25 +324,26 @@ components:
           type:
           - string
           - 'null'
-  responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: API key lacks the required permission or team access
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    OffsetPagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
   securitySchemes:
     bearerAuth:
       type: http

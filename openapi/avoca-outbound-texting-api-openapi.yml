@@ -95,23 +95,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
 components:
   schemas:
-    CursorPagination:
-      type: object
-      properties:
-        cursor:
-          type:
-          - string
-          - 'null'
-          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
-        has_more:
-          type: boolean
-        limit:
-          type: integer
-    TeamMeta:
-      type: object
-      properties:
-        team_id:
-          type: integer
     OutboundEvent:
       type: object
       properties:
@@ -130,6 +113,18 @@ components:
           format: date-time
         customer_phone_number:
           type: string
+    CursorPagination:
+      type: object
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Pass back as the `cursor` query parameter to fetch the next page; `null` on the last page
+        has_more:
+          type: boolean
+        limit:
+          type: integer
     Error:
       type: object
       properties:
@@ -141,6 +136,11 @@ components:
           description: Human-readable description (newer endpoints)
       required:
       - error
+    TeamMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
     CampaignText:
       type: object
       properties:
@@ -163,19 +163,6 @@ components:
         phone_number:
           type: string
   parameters:
-    endDate:
-      name: end_date
-      in: query
-      description: Only rows before this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    cursor:
-      name: cursor
-      in: query
-      description: Opaque pagination cursor from the previous response's `pagination.cursor`
-      schema:
-        type: string
     startDate:
       name: start_date
       in: query
@@ -183,6 +170,13 @@ components:
       schema:
         type: string
         format: date-time
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
     limit500default50:
       name: limit
       in: query
@@ -191,13 +185,19 @@ components:
         type: integer
         default: 50
         maximum: 500
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
       schema:
-        type: integer
+        type: string
+    endDate:
+      name: end_date
+      in: query
+      description: Only rows before this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
   responses:
     Forbidden:
       description: API key lacks the required permission or team access

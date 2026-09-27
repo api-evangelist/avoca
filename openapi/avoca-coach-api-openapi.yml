@@ -107,20 +107,19 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   parameters:
-    startDate7d:
-      name: start_date
+    endDateNow:
+      name: end_date
       in: query
-      description: Start of date range (ISO 8601; default 7 days ago)
+      description: End of date range (ISO 8601; default now)
       schema:
         type: string
         format: date-time
-    offset:
-      name: offset
-      in: query
-      description: Pagination offset (default 0)
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
       schema:
         type: integer
-        default: 0
     limit1000:
       name: limit
       in: query
@@ -129,10 +128,17 @@ components:
         type: integer
         default: 100
         maximum: 1000
-    endDateNow:
-      name: end_date
+    offset:
+      name: offset
       in: query
-      description: End of date range (ISO 8601; default now)
+      description: Pagination offset (default 0)
+      schema:
+        type: integer
+        default: 0
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
       schema:
         type: string
         format: date-time
@@ -143,24 +149,20 @@ components:
       schema:
         type: string
         default: America/New_York
-    xTeamId:
-      name: x-team-id
-      in: header
-      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
-      schema:
-        type: integer
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
     CoachCall:
       type: object
       description: An evaluated coach (QA) call. `evaluation_answers` maps rubric item keys to "Yes" / "No" / "N/A" — join to `GET /api/coach/rubrics` via `rubric_id` for item names.
@@ -237,6 +239,17 @@ components:
           additionalProperties:
             type: string
           description: Rubric item key → "Yes" | "No" | "N/A"
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
     OffsetPagination:
       type: object
       properties:
@@ -246,19 +259,6 @@ components:
           type: integer
         has_more:
           type: boolean
-  responses:
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
