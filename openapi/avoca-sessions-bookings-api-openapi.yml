@@ -265,20 +265,13 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   parameters:
-    startDate:
-      name: start_date
+    endDate:
+      name: end_date
       in: query
-      description: Only rows on/after this ISO 8601 timestamp
+      description: Only rows before this ISO 8601 timestamp
       schema:
         type: string
         format: date-time
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
     includeTestTeams:
       name: include_test_teams
       in: query
@@ -294,19 +287,26 @@ components:
         type: integer
         default: 50
         maximum: 500
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
     cursor:
       name: cursor
       in: query
       description: Opaque pagination cursor from the previous response's `pagination.cursor`
       schema:
         type: string
-    endDate:
-      name: end_date
-      in: query
-      description: Only rows before this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
   schemas:
     CursorPagination:
       type: object
@@ -320,17 +320,11 @@ components:
           type: boolean
         limit:
           type: integer
-    Error:
+    TeamMeta:
       type: object
       properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
+        team_id:
+          type: integer
     Session:
       type: object
       description: A customer's journey through the scheduling widget — from starting a booking to completing it or dropping off.
@@ -457,11 +451,17 @@ components:
               created_at:
                 type: string
                 format: date-time
-    TeamMeta:
+    Error:
       type: object
       properties:
-        team_id:
-          type: integer
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
   responses:
     Unauthorized:
       description: Missing or invalid API key
