@@ -220,30 +220,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
 components:
   schemas:
-    OffsetPagination:
-      type: object
-      properties:
-        limit:
-          type: integer
-        offset:
-          type: integer
-        has_more:
-          type: boolean
-    PeriodSummary:
-      type: object
-      properties:
-        sessions:
-          type: integer
-          examples:
-          - 312
-        bookings:
-          type: integer
-          examples:
-          - 89
-        conversionRate:
-          type: number
-          examples:
-          - 28.5
     SchedulerConfig:
       type: object
       properties:
@@ -259,6 +235,21 @@ components:
         updated_at:
           type: string
           format: date-time
+    PeriodSummary:
+      type: object
+      properties:
+        sessions:
+          type: integer
+          examples:
+          - 312
+        bookings:
+          type: integer
+          examples:
+          - 89
+        conversionRate:
+          type: number
+          examples:
+          - 28.5
     SchedulerAnalytics:
       type: object
       description: 'Metric blocks are present only when requested via the `metrics` parameter (default: all).'
@@ -394,6 +385,26 @@ components:
                 - string
                 - 'null'
                 format: date-time
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
+    OffsetPagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
     UtmRow:
       type: object
       properties:
@@ -415,60 +426,7 @@ components:
           type: integer
         conversions:
           type: integer
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
-  responses:
-    BadRequest:
-      description: Invalid parameters
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: API key lacks the required permission or team access
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
-    timezone:
-      name: timezone
-      in: query
-      description: IANA timezone for date calculations (default America/New_York)
-      schema:
-        type: string
-        default: America/New_York
-    limit500:
-      name: limit
-      in: query
-      description: Results per page (default 50, max 500)
-      schema:
-        type: integer
-        default: 50
-        maximum: 500
-    limit1000:
-      name: limit
-      in: query
-      description: Results per page (default 100, max 1000)
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
     xTeamId:
       name: x-team-id
       in: header
@@ -489,6 +447,29 @@ components:
       schema:
         type: string
         format: date-time
+    timezone:
+      name: timezone
+      in: query
+      description: IANA timezone for date calculations (default America/New_York)
+      schema:
+        type: string
+        default: America/New_York
+    limit1000:
+      name: limit
+      in: query
+      description: Results per page (default 100, max 1000)
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    limit500:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
     endDateNow:
       name: end_date
       in: query
@@ -496,6 +477,25 @@ components:
       schema:
         type: string
         format: date-time
+  responses:
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

@@ -94,48 +94,30 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
 components:
-  parameters:
-    endDate:
-      name: end_date
-      in: query
-      description: Only rows before this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    limit500default50:
-      name: limit
-      in: query
-      description: Results per page (default 50, max 500)
-      schema:
-        type: integer
-        default: 50
-        maximum: 500
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
-    startDate:
-      name: start_date
-      in: query
-      description: Only rows on/after this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    cursor:
-      name: cursor
-      in: query
-      description: Opaque pagination cursor from the previous response's `pagination.cursor`
-      schema:
-        type: string
   schemas:
     TeamMeta:
       type: object
       properties:
         team_id:
           type: integer
+    OutboundEvent:
+      type: object
+      properties:
+        action:
+          type: string
+          enum:
+          - outbound_message
+          - customer_subscribed
+          - customer_unsubscribed
+        customer_id:
+          type:
+          - string
+          - 'null'
+        created_at:
+          type: string
+          format: date-time
+        customer_phone_number:
+          type: string
     CursorPagination:
       type: object
       properties:
@@ -169,24 +151,6 @@ components:
           format: date-time
         phone_number:
           type: string
-    OutboundEvent:
-      type: object
-      properties:
-        action:
-          type: string
-          enum:
-          - outbound_message
-          - customer_subscribed
-          - customer_unsubscribed
-        customer_id:
-          type:
-          - string
-          - 'null'
-        created_at:
-          type: string
-          format: date-time
-        customer_phone_number:
-          type: string
     Error:
       type: object
       properties:
@@ -205,6 +169,42 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  parameters:
+    limit500default50:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    endDate:
+      name: end_date
+      in: query
+      description: Only rows before this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
   securitySchemes:
     bearerAuth:
       type: http

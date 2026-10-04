@@ -264,50 +264,31 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  parameters:
-    endDate:
-      name: end_date
-      in: query
-      description: Only rows before this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    includeTestTeams:
-      name: include_test_teams
-      in: query
-      description: Include designated internal QA/test teams in multi-team aggregations (default false)
-      schema:
-        type: boolean
-        default: false
-    limit500default50:
-      name: limit
-      in: query
-      description: Results per page (default 50, max 500)
-      schema:
-        type: integer
-        default: 50
-        maximum: 500
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
-    startDate:
-      name: start_date
-      in: query
-      description: Only rows on/after this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    cursor:
-      name: cursor
-      in: query
-      description: Opaque pagination cursor from the previous response's `pagination.cursor`
-      schema:
-        type: string
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    TeamMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
     CursorPagination:
       type: object
       properties:
@@ -320,11 +301,17 @@ components:
           type: boolean
         limit:
           type: integer
-    TeamMeta:
+    Error:
       type: object
       properties:
-        team_id:
-          type: integer
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
     Session:
       type: object
       description: A customer's journey through the scheduling widget — from starting a booking to completing it or dropping off.
@@ -451,36 +438,49 @@ components:
               created_at:
                 type: string
                 format: date-time
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: API key lacks the required permission or team access
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+    limit500default50:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    endDate:
+      name: end_date
+      in: query
+      description: Only rows before this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
   securitySchemes:
     bearerAuth:
       type: http

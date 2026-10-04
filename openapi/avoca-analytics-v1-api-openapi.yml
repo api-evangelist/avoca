@@ -181,42 +181,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  parameters:
-    timezone:
-      name: timezone
-      in: query
-      description: IANA timezone for date calculations (default America/New_York)
-      schema:
-        type: string
-        default: America/New_York
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
-    startDate7d:
-      name: start_date
-      in: query
-      description: Start of date range (ISO 8601; default 7 days ago)
-      schema:
-        type: string
-        format: date-time
-    includeTestTeams:
-      name: include_test_teams
-      in: query
-      description: Include designated internal QA/test teams in multi-team aggregations (default false)
-      schema:
-        type: boolean
-        default: false
-    endDateNow:
-      name: end_date
-      in: query
-      description: End of date range (ISO 8601; default now)
-      schema:
-        type: string
-        format: date-time
   responses:
     Forbidden:
       description: API key lacks the required permission or team access
@@ -265,6 +229,17 @@ components:
           description: Human-readable description (newer endpoints)
       required:
       - error
+    AnalyticsMeta:
+      type: object
+      properties:
+        team_id:
+          type: integer
+        start_date:
+          type: string
+        end_date:
+          type: string
+        timezone:
+          type: string
     UtmRow:
       type: object
       properties:
@@ -286,17 +261,42 @@ components:
           type: integer
         conversions:
           type: integer
-    AnalyticsMeta:
-      type: object
-      properties:
-        team_id:
-          type: integer
-        start_date:
-          type: string
-        end_date:
-          type: string
-        timezone:
-          type: string
+  parameters:
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+    timezone:
+      name: timezone
+      in: query
+      description: IANA timezone for date calculations (default America/New_York)
+      schema:
+        type: string
+        default: America/New_York
+    includeTestTeams:
+      name: include_test_teams
+      in: query
+      description: Include designated internal QA/test teams in multi-team aggregations (default false)
+      schema:
+        type: boolean
+        default: false
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
   securitySchemes:
     bearerAuth:
       type: http

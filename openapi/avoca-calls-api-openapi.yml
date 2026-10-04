@@ -176,7 +176,73 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  parameters:
+    offset:
+      name: offset
+      in: query
+      description: Pagination offset (default 0)
+      schema:
+        type: integer
+        default: 0
+    xTeamId:
+      name: x-team-id
+      in: header
+      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
+      schema:
+        type: integer
+    startDate7d:
+      name: start_date
+      in: query
+      description: Start of date range (ISO 8601; default 7 days ago)
+      schema:
+        type: string
+        format: date-time
+    limit1000:
+      name: limit
+      in: query
+      description: Results per page (default 100, max 1000)
+      schema:
+        type: integer
+        default: 100
+        maximum: 1000
+    endDateNow:
+      name: end_date
+      in: query
+      description: End of date range (ISO 8601; default now)
+      schema:
+        type: string
+        format: date-time
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: API key lacks the required permission or team access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
     OffsetPagination:
       type: object
       properties:
@@ -186,6 +252,45 @@ components:
           type: integer
         has_more:
           type: boolean
+    PreCallTransfer:
+      type: object
+      properties:
+        call_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        first_name:
+          type:
+          - string
+          - 'null'
+        last_name:
+          type:
+          - string
+          - 'null'
+        phone_number:
+          type:
+          - string
+          - 'null'
+        duration_seconds:
+          type: integer
+          description: Always 0 — the AI never engaged
+          examples:
+          - 0
+        transferred_to:
+          type: string
+          examples:
+          - '+11239876543'
+        rule_id:
+          type: integer
+        rule_type:
+          type: string
+          examples:
+          - RECENT_CALLER
+        recording_url:
+          type:
+          - string
+          - 'null'
     Call:
       type: object
       description: A call record. The exact columns returned on list endpoints are governed by the team's configured column allowlist; the fields below are the standard set.
@@ -239,111 +344,6 @@ components:
           - 'null'
           examples:
           - '+11234567890'
-    PreCallTransfer:
-      type: object
-      properties:
-        call_id:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        first_name:
-          type:
-          - string
-          - 'null'
-        last_name:
-          type:
-          - string
-          - 'null'
-        phone_number:
-          type:
-          - string
-          - 'null'
-        duration_seconds:
-          type: integer
-          description: Always 0 — the AI never engaged
-          examples:
-          - 0
-        transferred_to:
-          type: string
-          examples:
-          - '+11239876543'
-        rule_id:
-          type: integer
-        rule_type:
-          type: string
-          examples:
-          - RECENT_CALLER
-        recording_url:
-          type:
-          - string
-          - 'null'
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
-  responses:
-    Forbidden:
-      description: API key lacks the required permission or team access
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API key
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    limit1000:
-      name: limit
-      in: query
-      description: Results per page (default 100, max 1000)
-      schema:
-        type: integer
-        default: 100
-        maximum: 1000
-    xTeamId:
-      name: x-team-id
-      in: header
-      description: Target team ID. Required for multi-team (`enterprise_all_teams` / `portfolio_all_teams`) keys on v0 endpoints; single-team keys are locked to their team and omit it.
-      schema:
-        type: integer
-    offset:
-      name: offset
-      in: query
-      description: Pagination offset (default 0)
-      schema:
-        type: integer
-        default: 0
-    startDate7d:
-      name: start_date
-      in: query
-      description: Start of date range (ISO 8601; default 7 days ago)
-      schema:
-        type: string
-        format: date-time
-    endDateNow:
-      name: end_date
-      in: query
-      description: End of date range (ISO 8601; default now)
-      schema:
-        type: string
-        format: date-time
   securitySchemes:
     bearerAuth:
       type: http
