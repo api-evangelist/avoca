@@ -1,5 +1,5 @@
 generated: '2026-10-12'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/avoca/integrations
 - https://n8n.io/integrations/avoca/
@@ -10,7 +10,27 @@ checked:
 - https://monid.ai/tools/avoca
 - https://n8n.io/integrations/avoca/
 - https://zapier.com/apps/avoca/integrations
+- servicetitan/integrations/servicetitan-integration-edges.yml
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: ServiceTitan (own)
+  partner: servicetitan
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.servicetitan.com/partner/avoca-ai
+  mirror_of: servicetitan/integrations/servicetitan-integration-edges.yml
+  apps:
+  - Avoca AI
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Live Services, Marketing
+  badges:
+  - Certified App
 templates: []
