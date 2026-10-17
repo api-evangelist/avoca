@@ -94,12 +94,80 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
 components:
+  parameters:
+    cursor:
+      name: cursor
+      in: query
+      description: Opaque pagination cursor from the previous response's `pagination.cursor`
+      schema:
+        type: string
+    limit500default50:
+      name: limit
+      in: query
+      description: Results per page (default 50, max 500)
+      schema:
+        type: integer
+        default: 50
+        maximum: 500
+    endDate:
+      name: end_date
+      in: query
+      description: Only rows before this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
+    teamIdPath:
+      name: teamId
+      in: path
+      required: true
+      description: The team ID
+      schema:
+        type: integer
+    startDate:
+      name: start_date
+      in: query
+      description: Only rows on/after this ISO 8601 timestamp
+      schema:
+        type: string
+        format: date-time
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable description (newer endpoints)
+      required:
+      - error
     TeamMeta:
       type: object
       properties:
         team_id:
           type: integer
+    CampaignText:
+      type: object
+      properties:
+        action:
+          type: string
+          description: Constant `outbound_message` — this feed is outbound-only
+        customer_id:
+          type:
+          - string
+          - 'null'
+          description: Conversation's resolved CRM customer ID
+        campaign_name:
+          type: string
+        customer_response:
+          type: string
+          description: Body of the customer's first inbound reply, else `no response`
+        created_date:
+          type: string
+          format: date-time
+        phone_number:
+          type: string
     OutboundEvent:
       type: object
       properties:
@@ -130,38 +198,6 @@ components:
           type: boolean
         limit:
           type: integer
-    CampaignText:
-      type: object
-      properties:
-        action:
-          type: string
-          description: Constant `outbound_message` — this feed is outbound-only
-        customer_id:
-          type:
-          - string
-          - 'null'
-          description: Conversation's resolved CRM customer ID
-        campaign_name:
-          type: string
-        customer_response:
-          type: string
-          description: Body of the customer's first inbound reply, else `no response`
-        created_date:
-          type: string
-          format: date-time
-        phone_number:
-          type: string
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error type
-        message:
-          type: string
-          description: Human-readable description (newer endpoints)
-      required:
-      - error
   responses:
     Forbidden:
       description: API key lacks the required permission or team access
@@ -169,42 +205,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    limit500default50:
-      name: limit
-      in: query
-      description: Results per page (default 50, max 500)
-      schema:
-        type: integer
-        default: 50
-        maximum: 500
-    cursor:
-      name: cursor
-      in: query
-      description: Opaque pagination cursor from the previous response's `pagination.cursor`
-      schema:
-        type: string
-    endDate:
-      name: end_date
-      in: query
-      description: Only rows before this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
-    teamIdPath:
-      name: teamId
-      in: path
-      required: true
-      description: The team ID
-      schema:
-        type: integer
-    startDate:
-      name: start_date
-      in: query
-      description: Only rows on/after this ISO 8601 timestamp
-      schema:
-        type: string
-        format: date-time
   securitySchemes:
     bearerAuth:
       type: http
