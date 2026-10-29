@@ -64,6 +64,140 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Avoca is a company surfaced as a portfolio company of kleiner-perkins and added to the API Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the enrichment pipeline.
+Avoca is "The AI Front Office for Service Businesses" — always-on AI agents that answer inbound calls, texts, and web chats 24/7 for home-services companies (HVAC, plumbing, electrical, pest control, garage door, and construction), book jobs, run multi-channel outbound re-engagement campaigns, score and coach every call, and respond to leads instantly. The company raised a $125M Series B at a $1B valuation and serves 1,000+ service businesses. Avoca publishes an Enterprise API (bearer API-key auth over https://enterprise-api.avoca.ai) that exposes read access to calls, transcripts, leads, teams, coach/QA evaluations, sessions, bookings, outbound texting, and Simple Scheduler analytics, plus HMAC-signed event webhooks and a Speed-to-Lead intake webhook — designed for enterprise partners ingesting Avoca activity into their BI warehouses and CRMs (ServiceTitan, Dialpad, Five9, 3CX).
 
-Source: portfolio company of [kleiner-perkins](https://github.com/api-evangelist/kleiner-perkins)
+**Areas:** Company · Artificial Intelligence · Voice AI · Conversational AI · Customer Service · Contact Center · Home Services · Field Service Management · Scheduling · Analytics · Webhook · Enterprise API
+
+## Avoca on APIs.io
+
+Everything profiled for Avoca is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/avoca/](https://apis.io/providers/avoca/)** — or go straight to one of the APIs or properties below.
+
+### APIs (8)
+
+- [Avoca Analytics (v1) API](https://apis.io/apis/avoca/avoca-analytics-v1-api/) — v1 funnel, UTM, service-area, and issue-type analytics
+- [Avoca Calls API](https://apis.io/apis/avoca/avoca-calls-api/) — Call records, transcripts, and pre-call transfers
+- [Avoca Coach API](https://apis.io/apis/avoca/avoca-coach-api/) — Coach (QA) call evaluations and rubrics
+- [Avoca Leads API](https://apis.io/apis/avoca/avoca-leads-api/) — Unified leads (v0) and the canonical leads feed (v1)
+- [Avoca Outbound Texting API](https://apis.io/apis/avoca/avoca-outbound-texting-api/) — Campaign text and subscription-event feeds for BI ingestion
+- [Avoca Scheduler Analytics (v0) API](https://apis.io/apis/avoca/avoca-scheduler-analytics-v0-api/) — Simple Scheduler analytics — legacy flat endpoints
+- [Avoca Sessions & Bookings API](https://apis.io/apis/avoca/avoca-sessions-bookings-api/) — v1 scheduling-widget sessions and completed bookings
+- [Avoca Teams API](https://apis.io/apis/avoca/avoca-teams-api/) — Teams accessible to the API key
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Avoca Webhooks](https://apis.io/asyncapis/avoca/avoca-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [avoca](https://apis.io/servers/avoca/avoca/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Avoca Agentic Access](https://apis.io/agentic-access/avoca/avoca-agentic-access/)
+
+#### Collections (8)
+
+Postman and Open Collection request collections.
+
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Analytics (v1) API](https://apis.io/collections/avoca/open-avoca-analytics-v1-api/)
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Calls API](https://apis.io/collections/avoca/open-avoca-calls-api/)
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Coach API](https://apis.io/collections/avoca/open-avoca-coach-api/)
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Leads API](https://apis.io/collections/avoca/open-avoca-leads-api/)
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Outbound Texting API](https://apis.io/collections/avoca/open-avoca-outbound-texting-api/)
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Scheduler Analytics (v0) API](https://apis.io/collections/avoca/open-avoca-scheduler-analytics-v0-api/)
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Sessions & Bookings API](https://apis.io/collections/avoca/open-avoca-sessions-bookings-api/)
+- [Avoca Enterprise Analytics (v1) Analytics (v1) Teams API](https://apis.io/collections/avoca/open-avoca-teams-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Avoca Enterprise Overlay](https://apis.io/overlays/avoca/avoca-enterprise-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Avoca Authentication](https://apis.io/security/avoca/avoca-authentication/)
+- [Avoca Domain Security](https://apis.io/security/avoca/avoca-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.avoca.ai/)
+- [Documentation](https://docs.avoca.ai)
+- [Getting started](https://docs.avoca.ai/api-reference/introduction)
+- [API reference](https://docs.avoca.ai/api-reference/introduction)
+- [Sign up](https://dashboard.avoca.ai/)
+- [Changelog](https://docs.avoca.ai/changelog)
+- [Blog](https://www.avoca.ai/blog)
+- [Trust centre](https://trust.avoca.ai)
+- [Terms of service](https://www.avoca.ai/legal/terms-and-conditions)
+- [Privacy policy](https://www.avoca.ai/legal/privacy-policy)
+- [Status](https://status.avoca.ai)
+
+## API Evangelist rating
+
+**Kin Score 40.8** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 57.1 |
+| Contract governance | 4.5 |
+| Operational transparency | 31.6 |
+| Developer ergonomics | 35.1 |
+| Access clarity | 34.2 |
+
+**Agent readiness 29.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 22.7** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/avoca/](https://apis.io/providers/avoca/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Avoca: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/avoca/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
